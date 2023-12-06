@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "HjgsMDQA5vpQTd7s5C0/nSbkVX9B9BHvIecQDEgN9STUa+sfB3Rt83+gnsTrixIL6FasJ66NNfbhZqs6RnA2Sg==",
+  "dgSpecHash": "Yc2YjeUJNtfxgayfM8t+ndwenU5sR5mNVZEG5Ppub8WHXoXmwp2Hg8+EPk9lIBbaqrOm7q+Mjt42TneBSTcNSg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\mikhail\\Desktop\\folders\\projects\\MyBookingAPI\\Domain\\Domain.csproj",
+  "projectFilePath": "C:\\Users\\leoha\\RiderProjects\\MyBookingAPI\\Domain\\Domain.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

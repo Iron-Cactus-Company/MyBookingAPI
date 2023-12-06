@@ -20,6 +20,20 @@ public class ActivitiesController : BaseApiController{
 
     [HttpGet("{id}")] // /api/activities/id
     public async Task<ActionResult<Activity>> GetActivityById(Guid id){
-        return await _context.Activities.FindAsync(id);
+        return await _context.Activities.FindAsync(id) ;
+    }
+    
+    [HttpGet("test/{id}")] // /api/activities/test/id
+    public async Task<ActionResult<string>> GetActivities2(string id)
+    {
+        Console.WriteLine("start->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        
+        await Task.Delay(4000);
+
+        string result = "test" + id;
+
+        Console.WriteLine("end->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        
+        return result;
     }
 }

@@ -1,33 +1,35 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\mikhail\\Desktop\\folders\\projects\\MyBookingAPI\\API\\API.csproj": {}
+    "C:\\Users\\leoha\\RiderProjects\\MyBookingAPI\\API\\API.csproj": {}
   },
   "projects": {
-    "C:\\Users\\mikhail\\Desktop\\folders\\projects\\MyBookingAPI\\API\\API.csproj": {
+    "C:\\Users\\leoha\\RiderProjects\\MyBookingAPI\\API\\API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\mikhail\\Desktop\\folders\\projects\\MyBookingAPI\\API\\API.csproj",
+        "projectUniqueName": "C:\\Users\\leoha\\RiderProjects\\MyBookingAPI\\API\\API.csproj",
         "projectName": "API",
-        "projectPath": "C:\\Users\\mikhail\\Desktop\\folders\\projects\\MyBookingAPI\\API\\API.csproj",
-        "packagesPath": "C:\\Users\\mikhail\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\mikhail\\Desktop\\folders\\projects\\MyBookingAPI\\API\\obj\\",
+        "projectPath": "C:\\Users\\leoha\\RiderProjects\\MyBookingAPI\\API\\API.csproj",
+        "packagesPath": "C:\\Users\\leoha\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\leoha\\RiderProjects\\MyBookingAPI\\API\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\mikhail\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\leoha\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\mikhail\\Desktop\\folders\\projects\\MyBookingAPI\\Application\\Application.csproj": {
-                "projectPath": "C:\\Users\\mikhail\\Desktop\\folders\\projects\\MyBookingAPI\\Application\\Application.csproj"
+              "C:\\Users\\leoha\\RiderProjects\\MyBookingAPI\\Application\\Application.csproj": {
+                "projectPath": "C:\\Users\\leoha\\RiderProjects\\MyBookingAPI\\Application\\Application.csproj"
               }
             }
           }
@@ -80,33 +82,35 @@
         }
       }
     },
-    "C:\\Users\\mikhail\\Desktop\\folders\\projects\\MyBookingAPI\\Application\\Application.csproj": {
+    "C:\\Users\\leoha\\RiderProjects\\MyBookingAPI\\Application\\Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\mikhail\\Desktop\\folders\\projects\\MyBookingAPI\\Application\\Application.csproj",
+        "projectUniqueName": "C:\\Users\\leoha\\RiderProjects\\MyBookingAPI\\Application\\Application.csproj",
         "projectName": "Application",
-        "projectPath": "C:\\Users\\mikhail\\Desktop\\folders\\projects\\MyBookingAPI\\Application\\Application.csproj",
-        "packagesPath": "C:\\Users\\mikhail\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\mikhail\\Desktop\\folders\\projects\\MyBookingAPI\\Application\\obj\\",
+        "projectPath": "C:\\Users\\leoha\\RiderProjects\\MyBookingAPI\\Application\\Application.csproj",
+        "packagesPath": "C:\\Users\\leoha\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\leoha\\RiderProjects\\MyBookingAPI\\Application\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\mikhail\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\leoha\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\mikhail\\Desktop\\folders\\projects\\MyBookingAPI\\Domain\\Domain.csproj": {
-                "projectPath": "C:\\Users\\mikhail\\Desktop\\folders\\projects\\MyBookingAPI\\Domain\\Domain.csproj"
+              "C:\\Users\\leoha\\RiderProjects\\MyBookingAPI\\Domain\\Domain.csproj": {
+                "projectPath": "C:\\Users\\leoha\\RiderProjects\\MyBookingAPI\\Domain\\Domain.csproj"
               },
-              "C:\\Users\\mikhail\\Desktop\\folders\\projects\\MyBookingAPI\\Persistence\\Persistence.csproj": {
-                "projectPath": "C:\\Users\\mikhail\\Desktop\\folders\\projects\\MyBookingAPI\\Persistence\\Persistence.csproj"
+              "C:\\Users\\leoha\\RiderProjects\\MyBookingAPI\\Persistence\\Persistence.csproj": {
+                "projectPath": "C:\\Users\\leoha\\RiderProjects\\MyBookingAPI\\Persistence\\Persistence.csproj"
               }
             }
           }
@@ -140,22 +144,24 @@
         }
       }
     },
-    "C:\\Users\\mikhail\\Desktop\\folders\\projects\\MyBookingAPI\\Domain\\Domain.csproj": {
+    "C:\\Users\\leoha\\RiderProjects\\MyBookingAPI\\Domain\\Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\mikhail\\Desktop\\folders\\projects\\MyBookingAPI\\Domain\\Domain.csproj",
+        "projectUniqueName": "C:\\Users\\leoha\\RiderProjects\\MyBookingAPI\\Domain\\Domain.csproj",
         "projectName": "Domain",
-        "projectPath": "C:\\Users\\mikhail\\Desktop\\folders\\projects\\MyBookingAPI\\Domain\\Domain.csproj",
-        "packagesPath": "C:\\Users\\mikhail\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\mikhail\\Desktop\\folders\\projects\\MyBookingAPI\\Domain\\obj\\",
+        "projectPath": "C:\\Users\\leoha\\RiderProjects\\MyBookingAPI\\Domain\\Domain.csproj",
+        "packagesPath": "C:\\Users\\leoha\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\leoha\\RiderProjects\\MyBookingAPI\\Domain\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\mikhail\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\leoha\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -193,30 +199,32 @@
         }
       }
     },
-    "C:\\Users\\mikhail\\Desktop\\folders\\projects\\MyBookingAPI\\Persistence\\Persistence.csproj": {
+    "C:\\Users\\leoha\\RiderProjects\\MyBookingAPI\\Persistence\\Persistence.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\mikhail\\Desktop\\folders\\projects\\MyBookingAPI\\Persistence\\Persistence.csproj",
+        "projectUniqueName": "C:\\Users\\leoha\\RiderProjects\\MyBookingAPI\\Persistence\\Persistence.csproj",
         "projectName": "Persistence",
-        "projectPath": "C:\\Users\\mikhail\\Desktop\\folders\\projects\\MyBookingAPI\\Persistence\\Persistence.csproj",
-        "packagesPath": "C:\\Users\\mikhail\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\mikhail\\Desktop\\folders\\projects\\MyBookingAPI\\Persistence\\obj\\",
+        "projectPath": "C:\\Users\\leoha\\RiderProjects\\MyBookingAPI\\Persistence\\Persistence.csproj",
+        "packagesPath": "C:\\Users\\leoha\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\leoha\\RiderProjects\\MyBookingAPI\\Persistence\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\mikhail\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\leoha\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\mikhail\\Desktop\\folders\\projects\\MyBookingAPI\\Domain\\Domain.csproj": {
-                "projectPath": "C:\\Users\\mikhail\\Desktop\\folders\\projects\\MyBookingAPI\\Domain\\Domain.csproj"
+              "C:\\Users\\leoha\\RiderProjects\\MyBookingAPI\\Domain\\Domain.csproj": {
+                "projectPath": "C:\\Users\\leoha\\RiderProjects\\MyBookingAPI\\Domain\\Domain.csproj"
               }
             }
           }
