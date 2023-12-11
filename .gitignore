@@ -7,10 +7,20 @@
 .env
 
 *.db
+*.db-shm
+*.db-wal
 API/*.db
+API/*.db-shm
+API/*.db-wal
 Application/*.db
+Application/*.db-shm
+Application/*.db-wal
 Domain/*.db
+Domain/*.db-shm
+Domain/*.db-wal
 Persistence/*.db
+Persistence/*.db-shm
+Persistence/*.db-wal
 
 API/obj
 Application/obj
@@ -26,6 +36,7 @@ API/packages
 Application/packages
 Domain/packages
 Persistence/packages
+
 
 # User-specific files
 *.rsuser
