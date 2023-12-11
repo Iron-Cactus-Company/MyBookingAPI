@@ -8,6 +8,24 @@
 
 *.db
 API/*.db
+Application/*.db
+Domain/*.db
+Persistence/*.db
+
+API/obj
+Application/obj
+Domain/obj
+Persistence/obj
+
+API/bin
+Application/bin
+Domain/bin
+Persistence/bin
+
+API/packages
+Application/packages
+Domain/packages
+Persistence/packages
 
 # User-specific files
 *.rsuser
@@ -15,6 +33,9 @@ API/*.db
 *.user
 *.userosscache
 *.sln.docstates
+bin
+obj
+packages
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
