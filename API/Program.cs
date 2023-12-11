@@ -36,6 +36,7 @@ app.UseEndpoints(endpoints => {
 // app.UseHttpsRedirection();
 // app.UseAuthorization();
 // app.MapControllers();
+//lol
 
 //Create scope with using, which means that when everything is done in the scope is gonna be deleted from RAM (Garbage collector called)
 using var scope = app.Services.CreateScope();
