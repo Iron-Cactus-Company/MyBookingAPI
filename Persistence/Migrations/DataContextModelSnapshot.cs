@@ -73,6 +73,65 @@ namespace Persistence.Migrations
                     b.ToTable("Company");
                 });
 
+            modelBuilder.Entity("Domain.OpeningHours", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("FridayEnd")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("FridayStart")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("MondayEnd")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("MondayStart")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SaturdayEnd")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SaturdayStart")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SundayEnd")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SundayStart")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ThursdayEnd")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ThursdayStart")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TuesdayEnd")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TuesdayStart")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("WednesdayEnd")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("WednesdayStart")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId")
+                        .IsUnique();
+
+                    b.ToTable("OpeningHours");
+                });
+
             modelBuilder.Entity("Domain.Company", b =>
                 {
                     b.HasOne("Domain.BusinessProfile", "BusinessProfile")
@@ -82,9 +141,25 @@ namespace Persistence.Migrations
                     b.Navigation("BusinessProfile");
                 });
 
+            modelBuilder.Entity("Domain.OpeningHours", b =>
+                {
+                    b.HasOne("Domain.Company", "Company")
+                        .WithOne("OpeningHours")
+                        .HasForeignKey("Domain.OpeningHours", "CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Company");
+                });
+
             modelBuilder.Entity("Domain.BusinessProfile", b =>
                 {
                     b.Navigation("Companies");
+                });
+
+            modelBuilder.Entity("Domain.Company", b =>
+                {
+                    b.Navigation("OpeningHours");
                 });
 #pragma warning restore 612, 618
         }

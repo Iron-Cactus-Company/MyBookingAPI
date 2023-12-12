@@ -12,4 +12,6 @@ public class Company
     
     public Guid? BusinessProfileId { get; set; }
     public BusinessProfile? BusinessProfile { get; set; }
+    
+    public OpeningHours? OpeningHours { get; set; }
 }
