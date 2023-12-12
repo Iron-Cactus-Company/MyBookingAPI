@@ -1,0 +1,24 @@
+services:
+  db:
+    image: postgres:11-bullseye
+    restart: always
+    environment:
+      - POSTGRES_USER=my_booking
+      - POSTGRES_PASSWORD=my_booking
+      - POSTGRES_DB=my_booking_dev
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - myBooking_dev:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+  adminer:
+    image: adminer
+    restart: always
+    environment:
+      - ADMINER_DESIGN=nette
+    ports:
+      - 8080:8080
+        
+volumes:
+  myBooking_dev:
