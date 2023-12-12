@@ -37,6 +37,7 @@ try{
     //Update the DB if needed = not exists => create, SQL updated => update
     var context = services.GetRequiredService<DataContext>();
     await context.Database.MigrateAsync();
+    // await context.Database.EnsureCreatedAsync();
 }catch (Exception e){
     var logger = services.GetRequiredService<ILogger<Program>>();
     logger.LogError(e, "Error during migration or data seeding");
