@@ -10,4 +10,6 @@ public class Service
     
     public Guid CompanyId { get; set; }
     public Company Company { get; set; }
+
+    public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 }
