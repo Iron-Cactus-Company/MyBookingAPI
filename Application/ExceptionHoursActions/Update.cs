@@ -4,13 +4,13 @@ using Domain;
 using MediatR;
 using Persistence;
 
-namespace Application.OpeningHoursActions;
+namespace Application.ExceptionHoursActions;
 
 public class Update
 {
     public class Command : IRequest<Result<Unit>>
     {
-        public OpeningHours OpeningHours{ get; init; }
+        public ExceptionHours ExceptionHours{ get; init; }
     }
     
     public class Handler : IRequestHandler<Command, Result<Unit>>
@@ -26,11 +26,11 @@ public class Update
 
         public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
         {
-            var itemToUpdate = await _context.OpeningHours.FindAsync(request.OpeningHours.Id);
+            var itemToUpdate = await _context.ExceptionHours.FindAsync(request.ExceptionHours.Id);
             if (itemToUpdate == null)
                 return null;
 
-            _mapper.Map(request.OpeningHours, itemToUpdate);
+            _mapper.Map(request.ExceptionHours, itemToUpdate);
             
             var result = await _context.SaveChangesAsync() > 0;
 
