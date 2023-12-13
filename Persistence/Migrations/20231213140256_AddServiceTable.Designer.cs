@@ -12,8 +12,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20231213085020_AddExceptionHoursTable")]
-    partial class AddExceptionHoursTable
+    [Migration("20231213140256_AddServiceTable")]
+    partial class AddServiceTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -163,6 +163,34 @@ namespace Persistence.Migrations
                     b.ToTable("OpeningHours");
                 });
 
+            modelBuilder.Entity("Domain.Service", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<int>("Duration")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<int>("Price")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
+
+                    b.ToTable("Service");
+                });
+
             modelBuilder.Entity("Domain.Company", b =>
                 {
                     b.HasOne("Domain.BusinessProfile", "BusinessProfile")
@@ -194,6 +222,17 @@ namespace Persistence.Migrations
                     b.Navigation("Company");
                 });
 
+            modelBuilder.Entity("Domain.Service", b =>
+                {
+                    b.HasOne("Domain.Company", "Company")
+                        .WithMany("Services")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Company");
+                });
+
             modelBuilder.Entity("Domain.BusinessProfile", b =>
                 {
                     b.Navigation("Companies");
@@ -202,6 +241,8 @@ namespace Persistence.Migrations
             modelBuilder.Entity("Domain.Company", b =>
                 {
                     b.Navigation("OpeningHours");
+
+                    b.Navigation("Services");
                 });
 
             modelBuilder.Entity("Domain.OpeningHours", b =>

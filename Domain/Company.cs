@@ -14,4 +14,6 @@ public class Company
     public BusinessProfile? BusinessProfile { get; set; }
     
     public OpeningHours? OpeningHours { get; set; }
+
+    public ICollection<Service> Services { get; set; } = new List<Service>();
 }
