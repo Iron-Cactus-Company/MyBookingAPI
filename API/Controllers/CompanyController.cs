@@ -16,8 +16,8 @@ namespace API.Controllers
         // }
         
         
-        [HttpGet("{id:int}")]
-        public async Task<IActionResult> Get(int id)
+        [HttpGet("{id:guid}")]
+        public async Task<IActionResult> Get(Guid id)
         {
             // TODO: Implement logic to get a company by ID asynchronously
             var value = $"Value {id}";
