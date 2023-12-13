@@ -1,4 +1,5 @@
 ﻿using API.Contracts.Client;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -6,6 +7,15 @@ namespace API.Controllers
     [ApiController]
     public class ClientController : BaseApiController
     {
+        
+        private readonly IMapper _mapper;
+        
+        public ClientController(IMapper mapper)
+        {
+            _mapper = mapper;
+        }
+        
+        
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> Get(Guid id)
         {
@@ -27,25 +37,17 @@ namespace API.Controllers
             // TODO: Implement logic to add a client asynchronously
             var createdClientId = Guid.NewGuid().ToString();
             
-            var clientResponse = new ClientResponse
-            {
-                Id = createdClientId,
-                Name = createClientDto.Name,
-                Email = createClientDto.Email
-            };
+            var clientResponse = _mapper.Map<ClientResponseObject>(createClientDto);
 
+            clientResponse.Id = createdClientId;
             return CreatedAtAction(nameof(Get), new { id = createdClientId }, clientResponse);
         }
 
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateClientDto updateClientDto)
         {
-            var clientResponse = new ClientResponse
-            {
-                Id = updateClientDto.Id,
-                Name = updateClientDto.Name,
-                Email = updateClientDto.Email
-            };
+            var clientResponse = _mapper.Map<ClientResponseObject>(updateClientDto);
+            clientResponse.Id = updateClientDto.Id;
 
             // TODO: Implement logic to update a client asynchronously
             return Ok(clientResponse);
