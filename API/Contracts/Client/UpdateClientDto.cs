@@ -1,19 +1,20 @@
-﻿namespace API.Dtos.Client
+﻿namespace API.Contracts.Client
 {
-    using API.Dtos.Shared;
+    using API.Contracts.Shared;
     using System.ComponentModel.DataAnnotations;
 
-    public class CreateClientDto
+    public class UpdateClientDto
     {
-        [Required(ErrorMessage = "name is required")]
+        // [Required(ErrorMessage = "Id is required")]
+        [GuidValidation]
+        public string Id { get; set; }
+
         [StringLength(50, MinimumLength = 3, ErrorMessage = "{0} must be between {2} and {1} character(s) in length.")]
         public string Name { get; set; }
 
-        [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Invalid email format")]
         public string Email { get; set; }
 
-        [Required(ErrorMessage = "Password is required")]
         [MinLength(6, ErrorMessage = "Password must be at least 6 characters long")]
         public string Password { get; set; }
         
