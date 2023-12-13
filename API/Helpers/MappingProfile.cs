@@ -1,4 +1,5 @@
-﻿using API.Contracts.Company;
+﻿using API.Contracts.Client;
+using API.Contracts.Company;
 using AutoMapper;
 
 namespace API.Helpers;
@@ -9,5 +10,7 @@ public class MappingProfile : Profile
     {
         CreateMap<CreateCompanyDto, CompanyResponseObject>();
         CreateMap<UpdateCompanyDto, CompanyResponseObject>();
+        CreateMap<CreateClientDto, ClientResponseObject>();
+        CreateMap<UpdateClientDto, ClientResponseObject>();
     }
 }

@@ -8,12 +8,12 @@ namespace API.Controllers
     public class CompanyController : BaseApiController
     {
         
-        // private readonly IMapper _mapper;
-        //
-        // public CompanyController(IMapper mapper)
-        // {
-        //     _mapper = mapper;
-        // }
+        private readonly IMapper _mapper;
+        
+        public CompanyController(IMapper mapper)
+        {
+            _mapper = mapper;
+        }
         
         
         [HttpGet("{id:guid}")]
@@ -37,17 +37,8 @@ namespace API.Controllers
             // TODO: Implement logic to add a company asynchronously
             var createdCompanyId = Guid.NewGuid().ToString();
             
-            var companyResponse = new CompanyResponseObject
-            {
-                Id = createdCompanyId,
-                Name = createCompanyDto.Name,
-                Address = createCompanyDto.Address,
-                Phone = createCompanyDto.Phone,
-                Email = createCompanyDto.Email,
-                Description = createCompanyDto.Description,
-                AcceptingTimeText = createCompanyDto.AcceptingTimeText,
-                CancellingTimeMessage = createCompanyDto.CancellingTimeMessage
-            };
+            var companyResponse = _mapper.Map<CompanyResponseObject>(createCompanyDto);
+            companyResponse.Id = createdCompanyId;
 
             return CreatedAtAction(nameof(Get), new { id = createdCompanyId }, companyResponse);
         }
@@ -55,21 +46,8 @@ namespace API.Controllers
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateCompanyDto updateCompanyDto)
         {
-            // dynamic companyResponse = new ExpandoObject();
-
-            CompanyResponseObject companyResponse = new CompanyResponseObject
-            {
-                Id = updateCompanyDto.Id,
-                Name = updateCompanyDto.Name,
-                Address = updateCompanyDto.Address,
-                Phone = updateCompanyDto.Phone,
-                Email = updateCompanyDto.Email,
-                Description = updateCompanyDto.Description,
-                AcceptingTimeText = updateCompanyDto.AcceptingTimeText,
-                CancellingTimeMessage = updateCompanyDto.CancellingTimeMessage
-            };
-            
-            // var companyResponse = _mapper.Map<CompanyResponseObject>(updateCompanyDto);
+            var companyResponse = _mapper.Map<CompanyResponseObject>(updateCompanyDto);
+            companyResponse.Id = updateCompanyDto.Id;
             // TODO: Implement logic to update a company asynchronously
             return Ok(companyResponse);
         }
