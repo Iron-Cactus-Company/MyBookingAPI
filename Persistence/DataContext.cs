@@ -16,4 +16,6 @@ public class DataContext : DbContext{
     public DbSet<Service> Service { get; set; }
     
     public DbSet<Booking> Booking { get; set; }
+    
+    public DbSet<Client> Client { get; set; }
 }
