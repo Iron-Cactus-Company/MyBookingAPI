@@ -26,4 +26,5 @@ public class OpeningHours
     
     public Guid CompanyId { get; set; }
     public Company Company { get; set; }
+    public ICollection<ExceptionHours> ExceptionHours { get; set; } = new List<ExceptionHours>();
 }

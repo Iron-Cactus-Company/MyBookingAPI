@@ -11,5 +11,7 @@ public class DataContext : DbContext{
     
     public DbSet<OpeningHours> OpeningHours{ get; set; }
     
+    public DbSet<ExceptionHours> ExceptionHours{ get; set; }
+    
     // public DbSet<Activity> Activities{ get; set; }
 }
