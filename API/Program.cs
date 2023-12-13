@@ -16,6 +16,11 @@ app.UseMiddleware<ExceptionMiddleware>();
 if (app.Environment.IsDevelopment()){
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseDeveloperExceptionPage();
+}
+else
+{
+    app.UseExceptionHandler("/error");
 }
 
 app.UseStaticFiles();
@@ -24,6 +29,8 @@ app.UseRouting();
 app.UseEndpoints(endpoints => {
     endpoints.MapControllers();
 });
+
+
 
 // app.UseHttpsRedirection();
 // app.UseAuthorization();

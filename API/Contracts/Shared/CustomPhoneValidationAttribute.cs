@@ -1,8 +1,7 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using PhoneNumbers;
 
-namespace API.Dtos.Shared
+namespace API.Contracts.Shared
 {
     [Flags]
     public enum SupportedRegion
