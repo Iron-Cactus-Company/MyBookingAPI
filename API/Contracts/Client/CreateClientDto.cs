@@ -6,7 +6,7 @@
     public class CreateClientDto
     {
         [Required(ErrorMessage = "name is required")]
-        [StringLength(50, MinimumLength = 3, ErrorMessage = "{0} must be between {2} and {1} character(s) in length.")]
+        [StringLength(30, MinimumLength = 3, ErrorMessage = "{0} must be between {2} and {1} character(s) in length.")]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Email is required")]
@@ -14,7 +14,7 @@
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Password is required")]
-        [MinLength(6, ErrorMessage = "Password must be at least 6 characters long")]
+        [StringLength(30, MinimumLength = 6, ErrorMessage = "{0} must be between {2} and {1} character(s) in length.")]
         public string Password { get; set; }
         
         [CustomPhoneValidation(SupportedRegion.Finland , ErrorMessage = "Invalid Finnish number")]

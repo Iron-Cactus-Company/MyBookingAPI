@@ -5,7 +5,7 @@
 
     public class UpdateClientDto
     {
-        // [Required(ErrorMessage = "Id is required")]
+        [Required(ErrorMessage = "Id is required")]
         [GuidValidation]
         public string Id { get; set; }
 
