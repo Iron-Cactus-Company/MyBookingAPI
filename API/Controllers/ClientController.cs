@@ -27,7 +27,7 @@ namespace API.Controllers
             // TODO: Implement logic to add a client asynchronously
             var createdClientId = Guid.NewGuid().ToString();
             
-            var clientResponse = new ClientResponse
+            var clientResponse = new ClientResponseObject
             {
                 Id = createdClientId,
                 Name = createClientDto.Name,
@@ -40,7 +40,7 @@ namespace API.Controllers
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateClientDto updateClientDto)
         {
-            var clientResponse = new ClientResponse
+            var clientResponse = new ClientResponseObject
             {
                 Id = updateClientDto.Id,
                 Name = updateClientDto.Name,

@@ -1,6 +1,6 @@
 ﻿namespace API.Contracts.Client
 {
-    public class ClientResponse
+    public class ClientResponseObject
     {
         public string Id { get; set; }
         public string Name { get; set; }
