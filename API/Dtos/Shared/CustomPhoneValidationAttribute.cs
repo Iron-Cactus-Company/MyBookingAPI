@@ -48,7 +48,7 @@ namespace API.Dtos.Shared
                 }
             }
 
-            return new ValidationResult(ErrorMessage = "The string supplied did not seem to be a valid phone number.");
+            return new ValidationResult(ErrorMessage);
         }
 
         private string GetRegionCode(SupportedRegion region)
