@@ -9,5 +9,10 @@ public class MappingProfiles : Profile
     {
         CreateMap<BusinessProfile, BusinessProfile>();
         CreateMap<Company, Company>();
+        CreateMap<OpeningHours, OpeningHours>();
+        CreateMap<ExceptionHours, ExceptionHours>();
+        CreateMap<Service, Service>();
+        CreateMap<Booking, Booking>();
+        CreateMap<Client, Client>();
     }
 }
