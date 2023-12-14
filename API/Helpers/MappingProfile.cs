@@ -1,4 +1,6 @@
-﻿using API.Contracts.Client;
+﻿using API.Contracts.BusinessProfile;
+using API.Contracts.Client;
+using API.Contracts.Company;
 using AutoMapper;
 using Domain;
 namespace API.Helpers;
@@ -13,17 +15,17 @@ public class MappingProfile : Profile
         CreateMap<Client, ClientResponseObject>();
         
         
-        // CreateMap<List<Client>, List<ClientResponseObject>>();
-        // CreateMap<MyStuffDTO, MyStuffViewModel>()
-        //     .ForMember(dto => dto.MyDate, opt => opt.MapFrom(src => src.LastDate))
-        //     .ForMember(dto => dto.MyTime, opt => opt.MapFrom(src => src.LastTime))
-        //     .ForMember(dto => dto.Category, opt => opt.MapFrom(src => src.Category));
+        CreateMap <CreateCompanyDto, Client>();
+        CreateMap<UpdateCompanyDto, Client>();
+        CreateMap<Company, CompanyResponseObject>();
         
         
-        // CreateMap<CreateCompanyDto, CompanyResponseObject>();
-        // CreateMap<UpdateCompanyDto, CompanyResponseObject>();
-        // CreateMap<CreateClientDto, ClientResponseObject>();
-        // CreateMap<UpdateClientDto, ClientResponseObject>();
+        CreateMap <CreateBusinessProfileDto, BusinessProfile>();
+        CreateMap<UpdateBusinessProfileDto, BusinessProfile>();
+        CreateMap<BusinessProfile, BusinessProfileResponseObject>();
+        
+        
+     
     }
 }
 

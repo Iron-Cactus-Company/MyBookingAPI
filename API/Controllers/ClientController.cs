@@ -1,8 +1,9 @@
 ﻿using API.Contracts.Client;
 using Application.ClientActions;
-using Application.Core;
+
 using AutoMapper;
 using Domain;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -19,7 +20,7 @@ namespace API.Controllers
         }
         
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetMany()
         {
             var result = await Mediator.Send(new GetMany.Query());
             var serializedResult = _mapper.Map<IList<ClientResponseObject>>(result.Value);
@@ -68,11 +69,11 @@ namespace API.Controllers
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateClientDto updateClientDto)
         {
-            
-            // todo result returns empty value ; Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred 
-            var result = await Mediator.Send(new Create.Command
+            var result = await Mediator.Send(new Update.Command
             {
-                Client = _mapper.Map<Client>(updateClientDto)
+                // todo doesnt work
+                // Client = _mapper.Map<Client>(updateClientDto)
+                
             });
             
             if (!result.IsSuccess)

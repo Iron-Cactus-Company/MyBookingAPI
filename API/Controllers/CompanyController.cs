@@ -1,5 +1,7 @@
 ﻿using API.Contracts.Company;
+using Application.CompanyActions;
 using AutoMapper;
+using Domain;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -15,47 +17,71 @@ namespace API.Controllers
             _mapper = mapper;
         }
         
+        [HttpGet]
+        public async Task<IActionResult> GetMany()
+        {
+            var result = await Mediator.Send(new GetMany.Query());
+            var serializedResult = _mapper.Map<IList<CompanyResponseObject>>(result.Value);
+            
+            return Ok(serializedResult);
+        }
+        
         
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            // TODO: Implement logic to get a company by ID asynchronously
-            var value = $"Value {id}";
-            return Ok(value);
+            var result = await Mediator.Send(new GetOne.Query{ Id = id});
+            if (result.Value == null)
+            {
+                return NotFound();
+            }
+            var serializedResult = _mapper.Map<CompanyResponseObject>(result.Value);
+            return Ok(serializedResult);
         }
-
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
-        {
-            // TODO: Implement logic to get all companies asynchronously
-            return Ok("List of all companies");
-        }
+        
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateCompanyDto createCompanyDto)
         {
-            // TODO: Implement logic to add a company asynchronously
-            var createdCompanyId = Guid.NewGuid().ToString();
-            
-            var companyResponse = _mapper.Map<CompanyResponseObject>(createCompanyDto);
-            companyResponse.Id = createdCompanyId;
+            // todo result returns empty value 
+            var result = await Mediator.Send(new Create.Command
+            {
+                Company = _mapper.Map<Company>(createCompanyDto)
+            });
+            if (!result.IsSuccess)
+            {
+                return Conflict();
+            }
+            return Ok(result);
 
-            return CreatedAtAction(nameof(Get), new { id = createdCompanyId }, companyResponse);
+            // return CreatedAtAction(nameof(Get), new { id = result.value.Id }, companyResponse);
         }
 
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateCompanyDto updateCompanyDto)
         {
-            var companyResponse = _mapper.Map<CompanyResponseObject>(updateCompanyDto);
-            companyResponse.Id = updateCompanyDto.Id;
-            // TODO: Implement logic to update a company asynchronously
-            return Ok(companyResponse);
+            
+            var result = await Mediator.Send(new Update.Command
+            {
+                Company = _mapper.Map<Company>(updateCompanyDto)
+            });
+            
+            if (!result.IsSuccess)
+            {
+                return Conflict();
+            }
+            return Ok(result);
         }
 
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            // TODO: Implement logic to delete a company asynchronously
+            //todo fix internal error 500 when notfound
+            var result = await Mediator.Send(new Delete.Command{ Id = id});
+            if (!result.IsSuccess)
+            {
+                return Conflict();
+            }
             return NoContent();
         }
     }
