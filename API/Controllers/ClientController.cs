@@ -23,6 +23,7 @@ namespace API.Controllers
         public async Task<IActionResult> GetMany()
         {
             var result = await Mediator.Send(new GetMany.Query());
+            
             var serializedResult = _mapper.Map<IList<ClientResponseObject>>(result.Value);
             
             return Ok(serializedResult);
@@ -33,7 +34,7 @@ namespace API.Controllers
         {
             var result = await Mediator.Send(new GetOne.Query{ Id = id});
             
-            if (result.Value == null)
+            if (result.Value == null || !result.IsSuccess)
             {
                 return NotFound();
             }
