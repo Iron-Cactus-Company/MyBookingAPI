@@ -1,4 +1,6 @@
 using Application.Core;
+using Application.Core.Error;
+using Application.Core.Error.Enums;
 using Domain;
 using MediatR;
 using Persistence;
@@ -23,6 +25,13 @@ public class Create
 
         public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
         {
+            if (!GuidHandler.IsGuidNull(request.Company.BusinessProfileId))
+            {
+                var isBusinessProfileExists = await GuidHandler.IsEntityExists<BusinessProfile>(request.Company.BusinessProfileId, _context);
+                if(!isBusinessProfileExists)
+                    return Result<Unit>.Failure(new ApplicationRequestError{ Field = "BusinessProfile", Type = ErrorType.NotFound});
+            }
+            
             _context.Company.Add(request.Company);
             var resp = ResponseDeterminer.DetermineCreateResponse(await _context.SaveChangesAsync());
             if (!resp.isValid)

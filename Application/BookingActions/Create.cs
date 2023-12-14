@@ -1,4 +1,6 @@
 using Application.Core;
+using Application.Core.Error;
+using Application.Core.Error.Enums;
 using Domain;
 using MediatR;
 using Persistence;
@@ -23,6 +25,14 @@ public class Create
 
         public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
         {
+            var isServiceExists = await GuidHandler.IsEntityExists<Service>(request.Booking.ServiceId, _context);
+            if(!isServiceExists)
+                return Result<Unit>.Failure(new ApplicationRequestError{ Field = "ServiceId", Type = ErrorType.NotFound});
+            
+            var isClientExists = await GuidHandler.IsEntityExists<Client>(request.Booking.ClientId, _context);
+            if(!isClientExists)
+                return Result<Unit>.Failure(new ApplicationRequestError{ Field = "ClientId", Type = ErrorType.NotFound});
+            
             _context.Booking.Add(request.Booking);
             var resp = ResponseDeterminer.DetermineCreateResponse(await _context.SaveChangesAsync());
             if (!resp.isValid)

@@ -1,4 +1,6 @@
 using Application.Core;
+using Application.Core.Error;
+using Application.Core.Error.Enums;
 using AutoMapper;
 using Domain;
 using MediatR;
@@ -26,9 +28,16 @@ public class Update
 
         public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
         {
+            if (!GuidHandler.IsGuidNull(request.Company.BusinessProfileId))
+            {
+                var isBusinessProfileExists = await GuidHandler.IsEntityExists<BusinessProfile>(request.Company.BusinessProfileId, _context);
+                if(!isBusinessProfileExists)
+                    return Result<Unit>.Failure(new ApplicationRequestError{ Field = "BusinessProfile", Type = ErrorType.NotFound});
+            }
+            
             var itemToUpdate = await _context.Company.FindAsync(request.Company.Id);
             if (itemToUpdate == null)
-                return null;
+                return Result<Unit>.Failure(new ApplicationRequestError{ Field = "Id", Type = ErrorType.NotFound});
 
             _mapper.Map(request.Company, itemToUpdate);
             

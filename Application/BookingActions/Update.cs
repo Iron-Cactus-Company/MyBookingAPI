@@ -1,4 +1,6 @@
 using Application.Core;
+using Application.Core.Error;
+using Application.Core.Error.Enums;
 using AutoMapper;
 using Domain;
 using MediatR;
@@ -26,9 +28,23 @@ public class Update
 
         public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
         {
+            if (!GuidHandler.IsGuidNull(request.Booking.ServiceId))
+            {
+                var isServiceExists = await GuidHandler.IsEntityExists<Service>(request.Booking.ServiceId, _context);
+                if(!isServiceExists)
+                    return Result<Unit>.Failure(new ApplicationRequestError{ Field = "ServiceId", Type = ErrorType.NotFound});
+            }
+            
+            if (!GuidHandler.IsGuidNull(request.Booking.ClientId))
+            {
+                var isClientExists = await GuidHandler.IsEntityExists<Client>(request.Booking.ClientId, _context);
+                if(!isClientExists)
+                    return Result<Unit>.Failure(new ApplicationRequestError{ Field = "ClientId", Type = ErrorType.NotFound});
+            }
+            
             var itemToUpdate = await _context.Booking.FindAsync(request.Booking.Id);
             if (itemToUpdate == null)
-                return null;
+                return Result<Unit>.Failure(new ApplicationRequestError{ Field = "Id", Type = ErrorType.NotFound});
 
             _mapper.Map(request.Booking, itemToUpdate);
             
