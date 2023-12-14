@@ -33,7 +33,7 @@ namespace API.Contracts.Shared
 
             var phoneNumberUtil = PhoneNumberUtil.GetInstance();
 
-            foreach (SupportedRegion region in Enum.GetValues(typeof(SupportedRegion)))
+            foreach (SupportedRegion region in System.Enum.GetValues(typeof(SupportedRegion)))
             {
                 if (Regions.HasFlag(region))
                 {
