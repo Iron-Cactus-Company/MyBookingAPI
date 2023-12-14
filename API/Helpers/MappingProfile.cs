@@ -15,8 +15,8 @@ public class MappingProfile : Profile
         CreateMap<Client, ClientResponseObject>();
         
         
-        CreateMap <CreateCompanyDto, Client>();
-        CreateMap<UpdateCompanyDto, Client>();
+        CreateMap <CreateCompanyDto, Company>();
+        CreateMap<UpdateCompanyDto, Company>();
         CreateMap<Company, CompanyResponseObject>();
         
         
