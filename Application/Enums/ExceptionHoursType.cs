@@ -1,4 +1,4 @@
-namespace Application.Enum;
+namespace Application.Enums;
 
 public enum ExceptionHoursType
 {

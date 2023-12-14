@@ -1,4 +1,4 @@
-namespace Application.Error.Enum;
+namespace Application.Core.Error.Enums;
 
 public enum ErrorType
 {

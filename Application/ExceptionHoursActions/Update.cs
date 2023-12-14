@@ -32,9 +32,11 @@ public class Update
 
             _mapper.Map(request.ExceptionHours, itemToUpdate);
             
-            var result = await _context.SaveChangesAsync() > 0;
-
-            return result ? Result<Unit>.Success(Unit.Value) : Result<Unit>.Failure("Could not update");
+            var resp = ResponseDeterminer.DetermineUpdateResponse(await _context.SaveChangesAsync());
+            if (!resp.isValid)
+                return Result<Unit>.Failure(resp.error);
+            
+            return Result<Unit>.Success(Unit.Value);
         }
     }
 }

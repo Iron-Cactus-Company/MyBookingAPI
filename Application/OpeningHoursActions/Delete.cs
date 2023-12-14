@@ -28,9 +28,11 @@ public class Delete
             
             _context.Remove(itemToDelete);
             
-            var result = await _context.SaveChangesAsync() > 0;
-
-            return result ? Result<Unit>.Success(Unit.Value) : Result<Unit>.Failure("Could not delete");
+            var resp = ResponseDeterminer.DetermineDeleteResponse(await _context.SaveChangesAsync());
+            if (!resp.isValid)
+                return Result<Unit>.Failure(resp.error);
+            
+            return Result<Unit>.Success(Unit.Value);
         }
     }
 }

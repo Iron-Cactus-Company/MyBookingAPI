@@ -24,8 +24,11 @@ public class Create
         public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
         {
             _context.Client.Add(request.Client);
-            var result = await _context.SaveChangesAsync() > 0;
-            return !result ? Result<Unit>.Failure("Could not create") : Result<Unit>.Success(Unit.Value);
+            var resp = ResponseDeterminer.DetermineCreateResponse(await _context.SaveChangesAsync());
+            if (!resp.isValid)
+                return Result<Unit>.Failure(resp.error);
+            
+            return Result<Unit>.Success(Unit.Value);
         }
     }
 }
