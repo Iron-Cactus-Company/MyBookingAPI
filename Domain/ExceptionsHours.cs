@@ -3,8 +3,8 @@ namespace Domain;
 public class ExceptionHours
 {
     public Guid Id { get; set; }
-    public int Start { get; set; }
-    public int End { get; set; }
+    public long Start { get; set; }
+    public long End { get; set; }
     
     public int Type { get; set; }
     public string? Description { get; set; }

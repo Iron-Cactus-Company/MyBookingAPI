@@ -3,26 +3,26 @@ namespace Domain;
 public class OpeningHours
 {
     public Guid Id { get; set; }
-    public int MondayStart { get; set; }
-    public int MondayEnd { get; set; }
+    public long MondayStart { get; set; }
+    public long MondayEnd { get; set; }
     
-    public int TuesdayStart { get; set; }
-    public int TuesdayEnd { get; set; }
+    public long TuesdayStart { get; set; }
+    public long TuesdayEnd { get; set; }
     
-    public int WednesdayStart { get; set; }
-    public int WednesdayEnd { get; set; }
+    public long WednesdayStart { get; set; }
+    public long WednesdayEnd { get; set; }
     
-    public int ThursdayStart { get; set; }
-    public int ThursdayEnd { get; set; }
+    public long ThursdayStart { get; set; }
+    public long ThursdayEnd { get; set; }
     
-    public int FridayStart { get; set; }
-    public int FridayEnd { get; set; }
+    public long FridayStart { get; set; }
+    public long FridayEnd { get; set; }
     
-    public int SaturdayStart { get; set; }
-    public int SaturdayEnd { get; set; }
+    public long SaturdayStart { get; set; }
+    public long SaturdayEnd { get; set; }
     
-    public int SundayStart { get; set; }
-    public int SundayEnd { get; set; }
+    public long SundayStart { get; set; }
+    public long SundayEnd { get; set; }
     
     public Guid CompanyId { get; set; }
     public Company Company { get; set; }
