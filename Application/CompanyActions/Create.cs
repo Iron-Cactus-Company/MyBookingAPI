@@ -3,6 +3,7 @@ using Application.Core.Error;
 using Application.Core.Error.Enums;
 using Domain;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 namespace Application.CompanyActions;
@@ -31,6 +32,10 @@ public class Create
                 if(!isBusinessProfileExists)
                     return Result<Unit>.Failure(new ApplicationRequestError{ Field = "BusinessProfile", Type = ErrorType.NotFound});
             }
+            
+            var isNotUnique = await _context.Company.FirstOrDefaultAsync(item => item.Name == request.Company.Name) != null;
+            if(isNotUnique)
+                return Result<Unit>.Failure(new ApplicationRequestError{ Field = "Name", Type = ErrorType.NotUnique });
             
             _context.Company.Add(request.Company);
             var resp = ResponseDeterminer.DetermineCreateResponse(await _context.SaveChangesAsync());

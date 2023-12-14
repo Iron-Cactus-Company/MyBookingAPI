@@ -1,7 +1,10 @@
 using Application.Core;
+using Application.Core.Error;
+using Application.Core.Error.Enums;
 using AutoMapper;
 using Domain;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 namespace Application.ClientActions;
@@ -10,7 +13,7 @@ public class Update
 {
     public class Command : IRequest<Result<Unit>>
     {
-        public Booking Client { get; init; }
+        public Client Client { get; init; }
     }
     
     public class Handler : IRequestHandler<Command, Result<Unit>>
@@ -26,9 +29,16 @@ public class Update
 
         public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
         {
+            if (!string.IsNullOrEmpty(request.Client.Email))
+            {
+                var isNotUnique = await _context.BusinessProfile.FirstOrDefaultAsync(item => item.Email == request.Client.Email) != null;
+                if(isNotUnique)
+                    return Result<Unit>.Failure(new ApplicationRequestError{ Field = "Email", Type = ErrorType.NotUnique });
+            }
+            
             var itemToUpdate = await _context.Client.FindAsync(request.Client.Id);
             if (itemToUpdate == null)
-                return null;
+                return Result<Unit>.Failure(new ApplicationRequestError{ Field = "Id", Type = ErrorType.NotFound });
 
             _mapper.Map(request.Client, itemToUpdate);
             
