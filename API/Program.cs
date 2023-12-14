@@ -21,6 +21,8 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 var app = builder.Build();
 
+app.UseMiddleware<UserAuthenticationMiddleware>(builder.Configuration);
+
 // Configure the HTTP request pipeline.
 app.UseMiddleware<ExceptionMiddleware>();
 if (app.Environment.IsDevelopment()){
@@ -39,8 +41,6 @@ app.UseRouting();
 app.UseEndpoints(endpoints => {
     endpoints.MapControllers();
 });
-
-
 
 // app.UseHttpsRedirection();
 // app.UseAuthorization();
