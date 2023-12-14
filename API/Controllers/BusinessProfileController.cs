@@ -2,21 +2,20 @@ using API.Contracts.BusinessProfile;
 using Application.BusinessProfileActions;
 using AutoMapper;
 using Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
 public class BusinessProfileController : BaseApiController{
-    
-    
     private readonly IMapper _mapper;
         
     public BusinessProfileController(IMapper mapper)
     {
         _mapper = mapper;
     }
-    [HttpGet]
     
+    [HttpGet]
     public async Task<IActionResult> GetMany()
     {
         var result = await Mediator.Send(new GetMany.Query());
@@ -25,8 +24,6 @@ public class BusinessProfileController : BaseApiController{
         return Ok(serializedResult);
     }
     
-    
-
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetActivityById([FromRoute] Guid id)
     {
@@ -39,6 +36,7 @@ public class BusinessProfileController : BaseApiController{
         return Ok(serializedResult);
     }
     
+    [AllowAnonymous]
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateBusinessProfileDto createBusinessProfileDto)
     {
@@ -52,7 +50,6 @@ public class BusinessProfileController : BaseApiController{
         }
         return Ok(result);
     }
-    
     
     [HttpPut]
     public async Task<IActionResult> UpdateById([FromBody] UpdateBusinessProfileDto updateBusinessProfileDto)
