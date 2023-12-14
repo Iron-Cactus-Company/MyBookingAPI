@@ -48,7 +48,7 @@ public class BusinessProfileController : BaseApiController{
         {
             return Conflict();
         }
-        return Ok(result);
+        return Ok();
     }
     
     [HttpPut]
@@ -64,7 +64,7 @@ public class BusinessProfileController : BaseApiController{
         {
             return Conflict();
         }
-        return Ok(result);
+        return Ok();
         
     }
 

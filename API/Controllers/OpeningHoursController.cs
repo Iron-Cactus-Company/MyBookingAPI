@@ -1,87 +1,87 @@
-﻿using API.Contracts.Company;
-using Application.CompanyActions;
+﻿using API.Contracts.OpeningHours;
+using Application.OpeningHoursActions;
 using AutoMapper;
-using Domain;
 using Microsoft.AspNetCore.Mvc;
+using Domain;
 
 namespace API.Controllers
 {
     [ApiController]
-    public class CompanyController : BaseApiController
+    public class OpeningHoursController : BaseApiController
     {
-        
         private readonly IMapper _mapper;
-        
-        public CompanyController(IMapper mapper)
+
+        public OpeningHoursController(IMapper mapper)
         {
             _mapper = mapper;
         }
-        
+
         [HttpGet]
         public async Task<IActionResult> GetMany()
         {
             var result = await Mediator.Send(new GetMany.Query());
-            var serializedResult = _mapper.Map<IList<CompanyResponseObject>>(result.Value);
-            
+            var serializedResult = _mapper.Map<IList<OpeningHoursResponseObject>>(result.Value);
+
             return Ok(serializedResult);
         }
-        
-        
+
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var result = await Mediator.Send(new GetOne.Query{ Id = id});
+            var result = await Mediator.Send(new GetOne.Query { Id = id });
+
             if (result.Value == null)
             {
                 return NotFound();
             }
-            var serializedResult = _mapper.Map<CompanyResponseObject>(result.Value);
+
+            var serializedResult = _mapper.Map<OpeningHoursResponseObject>(result.Value);
+
             return Ok(serializedResult);
         }
-        
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateCompanyDto createCompanyDto)
+        public async Task<IActionResult> Create([FromBody] CreateOpeningHoursDto createOpeningHoursDto)
         {
-            // todo result returns empty value 
             var result = await Mediator.Send(new Create.Command
             {
-                Company = _mapper.Map<Company>(createCompanyDto)
+                OpeningHours = _mapper.Map<OpeningHours>(createOpeningHoursDto)
             });
+
             if (!result.IsSuccess)
             {
                 return Conflict();
             }
-            return Ok();
 
-            // return CreatedAtAction(nameof(Get), new { id = result.value.Id }, companyResponse);
+            return Ok();
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] UpdateCompanyDto updateCompanyDto)
+        public async Task<IActionResult> Update([FromBody] UpdateOpeningHoursDto updateOpeningHoursDto)
         {
-            
             var result = await Mediator.Send(new Update.Command
             {
-                Company = _mapper.Map<Company>(updateCompanyDto)
+                OpeningHours = _mapper.Map<OpeningHours>(updateOpeningHoursDto)
             });
-            
+
             if (!result.IsSuccess)
             {
                 return Conflict();
             }
+
             return Ok();
         }
 
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            //todo fix internal error 500 when notfound
-            var result = await Mediator.Send(new Delete.Command{ Id = id});
+            var result = await Mediator.Send(new Delete.Command { Id = id });
+
             if (!result.IsSuccess)
             {
                 return Conflict();
             }
+
             return NoContent();
         }
     }
