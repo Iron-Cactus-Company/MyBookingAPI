@@ -8,7 +8,13 @@ namespace API.Service;
 
 public class TokenService
 {
-    public string GenerateToken(string userId, ProfileType type, string secretKey)
+    private readonly IConfiguration _configuration;
+    public TokenService(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
+    
+    public string GenerateToken(string userId, ProfileType type)
     {
         var claims = new List<Claim>
         {
@@ -16,13 +22,13 @@ public class TokenService
             new Claim(ClaimTypes.Role, type.ToString())
         };
 
-        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["TokenKey"]));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha512Signature);
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.UtcNow.AddDays(7),
+            Expires = DateTime.UtcNow.AddDays(30),
             SigningCredentials = credentials
         };
 

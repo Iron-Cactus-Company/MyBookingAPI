@@ -1,10 +1,12 @@
 using Application.BusinessProfileActions;
 using Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
 public class BusinessProfileController : BaseApiController{
+    [AllowAnonymous]
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] BusinessProfile body)
     {
