@@ -4,6 +4,7 @@ using Application.Core.Error.Enums;
 using AutoMapper;
 using Domain;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 namespace Application.CompanyActions;
@@ -33,6 +34,13 @@ public class Update
                 var isBusinessProfileExists = await GuidHandler.IsEntityExists<BusinessProfile>(request.Company.BusinessProfileId, _context);
                 if(!isBusinessProfileExists)
                     return Result<Unit>.Failure(new ApplicationRequestError{ Field = "BusinessProfile", Type = ErrorType.NotFound});
+            }
+            
+            if (!string.IsNullOrEmpty(request.Company.Name))
+            {
+                var isNotUnique = await _context.Company.FirstOrDefaultAsync(item => item.Name == request.Company.Name) != null;
+                if(isNotUnique)
+                    return Result<Unit>.Failure(new ApplicationRequestError{ Field = "Name", Type = ErrorType.NotUnique });
             }
             
             var itemToUpdate = await _context.Company.FindAsync(request.Company.Id);
