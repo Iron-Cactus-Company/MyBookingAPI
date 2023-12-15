@@ -25,11 +25,11 @@ public class GetOne
         {
            var result = await _context.Booking.FindAsync(request.Id);
 
-            if(result.Value == null)
+            if(result == null)
                 return Result<Booking>.Success(result);
 
-           var client = _context.Booking.FindAsync(result.Value.ClientId);
-           result.Value.Client = client;
+           var client = await _context.Client.FindAsync(result.ClientId);
+           result.Client = client;
            
            return Result<Booking>.Success(result);
         }

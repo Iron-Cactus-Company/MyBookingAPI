@@ -37,6 +37,7 @@ Application/packages
 Domain/packages
 Persistence/packages
 
+.vscode
 
 # User-specific files
 *.rsuser
