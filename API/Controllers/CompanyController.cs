@@ -1,4 +1,5 @@
 ﻿using API.Contracts.Company;
+using API.Service;
 using Application.CompanyActions;
 using AutoMapper;
 using Domain;
@@ -11,10 +12,12 @@ namespace API.Controllers
     {
         
         private readonly IMapper _mapper;
-        
-        public CompanyController(IMapper mapper)
+        private readonly PermissionHelper _permissionHelper;
+
+        public CompanyController(IMapper mapper, PermissionHelper permissionHelper)
         {
             _mapper = mapper;
+            _permissionHelper = permissionHelper;
         }
         
         [HttpGet]
@@ -60,6 +63,8 @@ namespace API.Controllers
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateCompanyDto updateCompanyDto)
         {
+            if (! await _permissionHelper.IsCompanyOwner(GetLoggedUserId(), updateCompanyDto.Id))
+                return Unauthorized();
             
             var result = await Mediator.Send(new Update.Command
             {
@@ -76,8 +81,11 @@ namespace API.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
+            if (! await _permissionHelper.IsCompanyOwner(GetLoggedUserId(), id))
+                return Unauthorized();
+            
             //todo fix internal error 500 when notfound
-            var result = await Mediator.Send(new Delete.Command{ Id = id});
+            var result = await Mediator.Send(new Delete.Command{ Id = id });
             if (!result.IsSuccess)
             {
                 return Conflict();
