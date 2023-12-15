@@ -1,5 +1,6 @@
 ﻿using API.Contracts.ExceptionHours;
 using API.Contracts.OpeningHours;
+using API.Service;
 using Application.ExceptionHoursActions;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -12,10 +13,12 @@ namespace API.Controllers
     public class ExceptionHoursController : BaseApiController
     {
         private readonly IMapper _mapper;
+        private readonly PermissionHelper _permissionHelper;
 
-        public ExceptionHoursController(IMapper mapper)
+        public ExceptionHoursController(IMapper mapper, PermissionHelper permissionHelper)
         {
             _mapper = mapper;
+            _permissionHelper = permissionHelper;
         }
         
         [AllowAnonymous]
@@ -46,6 +49,10 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateExceptionHoursDto createExceptionHoursDto)
         {
+            var openingHours = await Mediator.Send(new Application.OpeningHoursActions.GetOne.Query{ Id = createExceptionHoursDto.OpeningHoursId });
+            if (! await _permissionHelper.IsCompanyOwner(GetLoggedUserId(), openingHours.Value.CompanyId))
+                return Unauthorized();
+            
             var result = await Mediator.Send(new Create.Command
             {
                 ExceptionHours = _mapper.Map<ExceptionHours>(createExceptionHoursDto)
@@ -62,6 +69,11 @@ namespace API.Controllers
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateExceptionHoursDto updateExceptionHoursDto)
         {
+            var exceptionHours = await Mediator.Send(new GetOne.Query{ Id = new Guid(updateExceptionHoursDto.Id) });
+            var openingHours = await Mediator.Send(new Application.OpeningHoursActions.GetOne.Query{ Id = exceptionHours.Value.OpeningHoursId });
+            if (! await _permissionHelper.IsCompanyOwner(GetLoggedUserId(), openingHours.Value.CompanyId))
+                return Unauthorized();
+            
             var result = await Mediator.Send(new Update.Command
             {
                 ExceptionHours = _mapper.Map<ExceptionHours>(updateExceptionHoursDto)
@@ -78,6 +90,11 @@ namespace API.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
+            var exceptionHours = await Mediator.Send(new GetOne.Query{ Id = id });
+            var openingHours = await Mediator.Send(new Application.OpeningHoursActions.GetOne.Query{ Id = exceptionHours.Value.OpeningHoursId });
+            if (! await _permissionHelper.IsCompanyOwner(GetLoggedUserId(), openingHours.Value.CompanyId))
+                return Unauthorized();
+            
             var result = await Mediator.Send(new Delete.Command { Id = id });
 
             if (!result.IsSuccess)
