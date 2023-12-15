@@ -1,6 +1,9 @@
 using System.Text;
 using API.Service;
+using Application.Core.Security;
+using Domain;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
 namespace API.Extensions;
@@ -25,6 +28,8 @@ public static class AuthServiceExtensions
                 };
             });
         services.AddScoped<TokenService>();
+        services.AddScoped<IPasswordHasher<BusinessProfile>, PasswordHasher<BusinessProfile>>();
+        services.AddScoped<PasswordManager>();
 
         return services;
     }
