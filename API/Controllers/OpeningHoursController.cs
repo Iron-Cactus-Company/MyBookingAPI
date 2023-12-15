@@ -1,4 +1,5 @@
 ﻿using API.Contracts.OpeningHours;
+using API.Service;
 using Application.OpeningHoursActions;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -10,8 +11,9 @@ namespace API.Controllers
     public class OpeningHoursController : BaseApiController
     {
         private readonly IMapper _mapper;
+        private readonly PermissionHelper _permissionHelper;
 
-        public OpeningHoursController(IMapper mapper)
+        public OpeningHoursController(IMapper mapper, PermissionHelper permissionHelper)
         {
             _mapper = mapper;
         }
@@ -43,6 +45,9 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateOpeningHoursDto createOpeningHoursDto)
         {
+            if (! await _permissionHelper.IsCompanyOwner(GetLoggedUserId(), createOpeningHoursDto.CompanyId))
+                return Unauthorized();
+            
             var result = await Mediator.Send(new Create.Command
             {
                 OpeningHours = _mapper.Map<OpeningHours>(createOpeningHoursDto)
@@ -59,6 +64,10 @@ namespace API.Controllers
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateOpeningHoursDto updateOpeningHoursDto)
         {
+            var openingHours = await Mediator.Send(new GetOne.Query{ Id = new Guid(updateOpeningHoursDto.Id) });
+            if (! await _permissionHelper.IsCompanyOwner(GetLoggedUserId(), openingHours.Value.CompanyId))
+                return Unauthorized();
+            
             var result = await Mediator.Send(new Update.Command
             {
                 OpeningHours = _mapper.Map<OpeningHours>(updateOpeningHoursDto)
@@ -75,6 +84,10 @@ namespace API.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
+            var openingHours = await Mediator.Send(new GetOne.Query{ Id = id });
+            if (! await _permissionHelper.IsCompanyOwner(GetLoggedUserId(), openingHours.Value.CompanyId))
+                return Unauthorized();
+            
             var result = await Mediator.Send(new Delete.Command { Id = id });
 
             if (!result.IsSuccess)
