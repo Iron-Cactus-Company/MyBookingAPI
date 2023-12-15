@@ -1,4 +1,5 @@
-﻿using API.Contracts.Service; // Замените на нужные вам using'и
+﻿using API.Contracts.Service;
+using API.Service; // Замените на нужные вам using'и
 using Application.ServiceActions;
 using AutoMapper;
 
@@ -11,10 +12,12 @@ namespace API.Controllers
     public class ServiceController : BaseApiController
     {
         private readonly IMapper _mapper;
+        private readonly PermissionHelper _permissionHelper;
 
-        public ServiceController(IMapper mapper)
+        public ServiceController(IMapper mapper, PermissionHelper permissionHelper)
         {
             _mapper = mapper;
+            _permissionHelper = permissionHelper;
         }
 
         [HttpGet]
@@ -44,6 +47,9 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateServiceDto createServiceDto)
         {
+            if (! await _permissionHelper.IsCompanyOwner(GetLoggedUserId(), createServiceDto.CompanyId))
+                return Unauthorized();
+            
             var result = await Mediator.Send(new Create.Command
             {
                 Service = _mapper.Map<Domain.Service>(createServiceDto)
@@ -60,6 +66,10 @@ namespace API.Controllers
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateServiceDto updateServiceDto)
         {
+            var service = await Mediator.Send(new GetOne.Query{ Id = new Guid(updateServiceDto.Id) });
+            if (! await _permissionHelper.IsCompanyOwner(GetLoggedUserId(), service.Value.CompanyId))
+                return Unauthorized();
+            
             var result = await Mediator.Send(new Update.Command
             {
                 Service = _mapper.Map<Domain.Service>(updateServiceDto)
@@ -76,6 +86,9 @@ namespace API.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
+            var service = await Mediator.Send(new GetOne.Query{ Id = id });
+            if (! await _permissionHelper.IsCompanyOwner(GetLoggedUserId(), service.Value.CompanyId))
+                return Unauthorized();
             var result = await Mediator.Send(new Delete.Command { Id = id });
 
             if (!result.IsSuccess)
