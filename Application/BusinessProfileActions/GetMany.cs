@@ -8,25 +8,36 @@ namespace Application.BusinessProfileActions;
 
 public class GetMany
 {
-    public class Query : IRequest<Result<List<BusinessProfile>>>{}
+    public class Query : IRequest<Result<List<BusinessProfile>>>
+    {
+        public ReadOptions Options { get; init; } 
+    }
     
     public class Handler : IRequestHandler<Query, Result<List<BusinessProfile>>>
     {
         private readonly DataContext _context;
+        private readonly OffsetPaginator<BusinessProfile> _offsetPaginator = new OffsetPaginator();
 
         public Handler(DataContext context)
         {
             _context = context;
         }
         
-        //cancellation token can be used for cancelling the request.
-        //Cancelling may happen if the user close the browser,
-        //for example if something took too long to be processed
-        //U may get that parameter in the controller and get it here
         public async Task<Result<List<BusinessProfile>>> Handle(Query request, CancellationToken cancellationToken)
         {
-            var result = await _context.BusinessProfile.ToListAsync();
+            if(request.Options.PageNumber == null && request.Options.Limit == null){
+                var result = await _context.BusinessProfile.ToListAsync();
+                return Result<List<BusinessProfile>>.Success(result);
+            }
+            
+            var result = await _offsetPaginator.paginate(_context.BusinessProfile, request.Options.PageNumber, request.Options.Limit);
             return Result<List<BusinessProfile>>.Success(result);
+            //var currentPosition = request.Options.PageNumber*request.Options.Limit;
+            //var result = await _context.BusinessProfile
+              //  .OrderBy(item => item.Id)
+                //.Skip(currentPosition)
+               // .Take(request.Options.Limit)
+                //.ToListAsync(); 
         }
     }
 }
