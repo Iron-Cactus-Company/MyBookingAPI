@@ -4,7 +4,6 @@ using API.Service;
 using Application.BusinessProfileActions;
 using Application.Core.Security;
 using AutoMapper;
-using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
