@@ -11,4 +11,5 @@ public class BookingResponseObject
     public Service Service { get; set; }
     
     public Guid ClientId { get; set; }
+    public Client Client { get; set; }
 }

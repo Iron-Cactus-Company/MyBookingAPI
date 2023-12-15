@@ -31,6 +31,11 @@ namespace API.Controllers
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> Get(Guid id)
         {
+            var booking = await Mediator.Send(new GetOne.Query{ Id = id });
+            var service = await Mediator.Send(new Application.ServiceActions.GetOne.Query{ Id = booking.Value.ServiceId });
+            if (! await _permissionHelper.IsCompanyOwner(GetLoggedUserId(), service.Value.CompanyId))
+                return Unauthorized();
+
             var result = await Mediator.Send(new GetOne.Query { Id = id });
 
             if (result.Value == null)

@@ -24,6 +24,12 @@ public class GetOne
         public async Task<Result<Booking>> Handle(Query request, CancellationToken cancellationToken)
         {
            var result = await _context.Booking.FindAsync(request.Id);
+
+            if(result.Value == null)
+                return Result<Booking>.Success(result);
+
+           var client = _context.Booking.FindAsync(result.Value.ClientId);
+           result.Value.Client = client;
            
            return Result<Booking>.Success(result);
         }
