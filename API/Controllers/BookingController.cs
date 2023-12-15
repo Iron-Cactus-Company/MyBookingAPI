@@ -1,5 +1,5 @@
 ﻿using API.Contracts.Booking;
-using API.Contracts.Client;
+using API.Service;
 using Application.BookingActions;
 using AutoMapper;
 using Domain;
@@ -11,10 +11,12 @@ namespace API.Controllers
     public class BookingController : BaseApiController
     {
         private readonly IMapper _mapper;
+        private readonly PermissionHelper _permissionHelper;
 
-        public BookingController(IMapper mapper)
+        public BookingController(IMapper mapper, PermissionHelper permissionHelper)
         {
             _mapper = mapper;
+            _permissionHelper = permissionHelper;
         }
 
         [HttpGet]
@@ -59,6 +61,11 @@ namespace API.Controllers
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateBookingDto updateBookingDto)
         {
+            var booking = await Mediator.Send(new GetOne.Query{ Id = new Guid(updateBookingDto.Id) });
+            var service = await Mediator.Send(new Application.ServiceActions.GetOne.Query{ Id = booking.Value.ServiceId });
+            if (! await _permissionHelper.IsCompanyOwner(GetLoggedUserId(), service.Value.CompanyId))
+                return Unauthorized();
+            
             var result = await Mediator.Send(new Update.Command
             {
                 Booking = _mapper.Map<Booking>(updateBookingDto)
@@ -75,6 +82,11 @@ namespace API.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
+            var booking = await Mediator.Send(new GetOne.Query{ Id = id });
+            var service = await Mediator.Send(new Application.ServiceActions.GetOne.Query{ Id = booking.Value.ServiceId });
+            if (! await _permissionHelper.IsCompanyOwner(GetLoggedUserId(), service.Value.CompanyId))
+                return Unauthorized();
+            
             var result = await Mediator.Send(new Delete.Command { Id = id });
 
             if (!result.IsSuccess)
