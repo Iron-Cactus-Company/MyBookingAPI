@@ -15,23 +15,26 @@ public class BusinessProfileController : BaseApiController{
         _mapper = mapper;
     }
     
-    [HttpGet]
-    public async Task<IActionResult> GetMany()
-    {
-        var result = await Mediator.Send(new GetMany.Query());
-        var serializedResult = _mapper.Map<IList<BusinessProfileResponseObject>>(result.Value);
-            
-        return Ok(serializedResult);
-    }
+    // [HttpGet]
+    // public async Task<IActionResult> GetMany()
+    // {
+    //     var result = await Mediator.Send(new GetMany.Query());
+    //     var serializedResult = _mapper.Map<IList<BusinessProfileResponseObject>>(result.Value);
+    //         
+    //     return Ok(serializedResult);
+    // }
     
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetActivityById([FromRoute] Guid id)
     {
-        var result = await Mediator.Send(new GetOne.Query{ Id = id});
+        var result = await Mediator.Send(new GetOne.Query{ Id = id });
         if (result.Value == null)
-        {
             return NotFound();
-        }
+
+        //Only owner may read
+        if (!IsProfileOwner(id))
+            return Unauthorized();
+        
         var serializedResult = _mapper.Map<BusinessProfileResponseObject>(result.Value);
         return Ok(serializedResult);
     }
@@ -54,6 +57,9 @@ public class BusinessProfileController : BaseApiController{
     [HttpPut]
     public async Task<IActionResult> UpdateById([FromBody] UpdateBusinessProfileDto updateBusinessProfileDto)
     {
+        //Only owner may update
+        if (!IsProfileOwner(updateBusinessProfileDto.Id))
+            return Unauthorized();
        
         var result = await Mediator.Send(new Update.Command
         {
@@ -71,6 +77,10 @@ public class BusinessProfileController : BaseApiController{
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> DeleteById([FromRoute] Guid id)
     {
+        //Only owner may delete
+        if (!IsProfileOwner(id))
+            return Unauthorized();
+        
         //todo fix internal error 500 when notfound
         var result = await Mediator.Send(new Delete.Command{ Id = id});
         if (!result.IsSuccess)
@@ -78,5 +88,14 @@ public class BusinessProfileController : BaseApiController{
             return Conflict();
         }
         return NoContent();
+    }
+
+    private bool IsProfileOwner(Guid requestId)
+    {
+        return requestId.ToString() == GetLoggedUserId();
+    }
+    private bool IsProfileOwner(string requestId)
+    {
+        return requestId == GetLoggedUserId();
     }
 }
