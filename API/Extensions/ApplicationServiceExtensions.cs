@@ -1,3 +1,4 @@
+using API.Service;
 using Application.BusinessProfileActions;
 using Application.Core;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +25,7 @@ public static class ApplicationServiceExtensions
         services.AddMediatR(config => config.RegisterServicesFromAssembly(typeof(GetMany.Handler).Assembly));
         //Add automapper for update requests
         services.AddAutoMapper(typeof(MappingProfiles).Assembly);
+        services.AddScoped<PermissionHelper>();
 
         return services;
     }
