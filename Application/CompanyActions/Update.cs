@@ -32,6 +32,7 @@ public class Update
             if (!GuidHandler.IsGuidNull(request.Company.BusinessProfileId))
             {
                 var isBusinessProfileExists = await GuidHandler.IsEntityExists<BusinessProfile>(request.Company.BusinessProfileId, _context);
+
                 if(!isBusinessProfileExists)
                     return Result<Unit>.Failure(new ApplicationRequestError{ Field = "BusinessProfile", Type = ErrorType.NotFound});
             }
@@ -48,8 +49,25 @@ public class Update
                 return Result<Unit>.Failure(new ApplicationRequestError{ Field = "Id", Type = ErrorType.NotFound});
 
             _mapper.Map(request.Company, itemToUpdate);
-            
-            var resp = ResponseDeterminer.DetermineUpdateResponse(await _context.SaveChangesAsync());
+
+Console.WriteLine("-------------------------");
+            Console.WriteLine(itemToUpdate.Id);
+            Console.WriteLine(itemToUpdate.Email);
+            Console.WriteLine("-------------------------");
+
+        //TODO: Fix automapper bugs. It adds all properties to itemToUpdate, even if they are null
+        //Probably there are 2 Automapper registrations 
+            int respDB = 0;
+            try
+            {
+                itemToUpdate.BusinessProfileId = new Guid("975de39d-c5ab-4902-96d2-0ba730f65f96");
+                respDB = await _context.SaveChangesAsync();
+            }
+            catch(Exception e){
+                Console.WriteLine(e.Message);
+            }
+
+            var resp = ResponseDeterminer.DetermineUpdateResponse(respDB);
             if (!resp.isValid)
                 return Result<Unit>.Failure(resp.error);
             

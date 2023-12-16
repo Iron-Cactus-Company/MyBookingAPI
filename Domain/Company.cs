@@ -11,8 +11,8 @@ public class Company
     public string AcceptingTimeText { get; set; }
     public string CancellingTimeText { get; set; }
     
-    public Guid? BusinessProfileId { get; set; }
-    public BusinessProfile? BusinessProfile { get; set; }
+    public Guid BusinessProfileId { get; set; }
+    public BusinessProfile BusinessProfile { get; set; }
     
     public OpeningHours? OpeningHours { get; set; }
 

@@ -7,7 +7,8 @@ public class GuidHandler
 {
     public static bool IsGuidNull(Guid? guid)
     {
-        return string.IsNullOrEmpty(guid.ToString());
+        var guidStr = guid.ToString();
+        return string.IsNullOrEmpty(guidStr) || guidStr == "00000000-0000-0000-0000-000000000000";
     }
     
     public static async Task<bool> IsEntityExists<T>(Guid? entityId, DataContext context) where T : class

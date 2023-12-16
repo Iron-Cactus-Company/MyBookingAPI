@@ -12,7 +12,7 @@
         [StringLength(30, MinimumLength = 3, ErrorMessage = "{0} must be between {2} and {1} character(s) in length.")]
         public string Address { get; set; }
 
-        [CustomPhoneValidation(SupportedRegion.Finland , ErrorMessage = "Invalid Finnish number")]
+        //[CustomPhoneValidation(SupportedRegion.Finland , ErrorMessage = "Invalid Finnish number")]
         public string Phone { get; set; }
 
         [Required(ErrorMessage = "Email is required")]

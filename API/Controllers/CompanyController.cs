@@ -3,6 +3,7 @@ using API.Service;
 using Application.CompanyActions;
 using AutoMapper;
 using Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -20,6 +21,7 @@ namespace API.Controllers
             _permissionHelper = permissionHelper;
         }
         
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetMany()
         {
@@ -29,7 +31,7 @@ namespace API.Controllers
             return Ok(serializedResult);
         }
         
-        
+        [AllowAnonymous]
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> Get(Guid id)
         {
