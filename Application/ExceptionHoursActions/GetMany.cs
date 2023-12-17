@@ -1,4 +1,6 @@
 using Application.Core;
+using Application.Core.Error;
+using Application.Core.Error.Enums;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +24,7 @@ public class GetMany
         public async Task<Result<List<ExceptionHours>>> Handle(Query request, CancellationToken cancellationToken)
         {
             var result = await _context.ExceptionHours.ToListAsync();
-            return Result<List<ExceptionHours>>.Success(result);
+            return result.Count() != 0 ? Result<List<ExceptionHours>>.Success(result) : Result<List<ExceptionHours>>.Failure(new ApplicationRequestError{ Type = ErrorType.NotFound });
         }
     }
 }

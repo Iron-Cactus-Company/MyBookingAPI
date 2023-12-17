@@ -1,4 +1,6 @@
 using Application.Core;
+using Application.Core.Error;
+using Application.Core.Error.Enums;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -32,16 +34,8 @@ public class GetMany
             
             var result = await _offsetPaginator
             .paginate(_context.BusinessProfile, (int)request.Options.PageNumber, (int)request.Options.Limit);
-            return Result<List<BusinessProfile>>.Success(result);
             
-            //var currentPosition = request.Options.PageNumber*request.Options.Limit;
-            /*var result = await _context.BusinessProfile
-                .OrderBy(item => item.Id)
-               .Skip(currentPosition)
-                //.Take(request.Options.Limit)
-                .ToListAsync(); */
-
-            //return Result<List<BusinessProfile>>.Success(null);*/
+            return result.Count() != 0 ? Result<List<BusinessProfile>>.Success(result) : Result<List<BusinessProfile>>.Failure(new ApplicationRequestError{ Type = ErrorType.NotFound });
         }
     }
 }

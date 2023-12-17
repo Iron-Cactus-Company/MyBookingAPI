@@ -1,4 +1,6 @@
 using Application.Core;
+using Application.Core.Error;
+using Application.Core.Error.Enums;
 using Domain;
 using MediatR;
 using Persistence;
@@ -24,8 +26,7 @@ public class GetOne
         public async Task<Result<Service>> Handle(Query request, CancellationToken cancellationToken)
         {
            var result = await _context.Service.FindAsync(request.Id);
-           
-           return Result<Service>.Success(result);
+           return result != null ? Result<Service>.Success(result) : Result<Service>.Failure(new ApplicationRequestError{ Type = ErrorType.NotFound, Field = "Id" });
         }
     }
 }

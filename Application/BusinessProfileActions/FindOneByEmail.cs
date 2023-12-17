@@ -1,4 +1,6 @@
 using Application.Core;
+using Application.Core.Error;
+using Application.Core.Error.Enums;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -26,7 +28,7 @@ public class FindOneByEmail
         {
             var result = await _context.BusinessProfile.FirstOrDefaultAsync(item => item.Email == request.Email);
            
-           return Result<BusinessProfile>.Success(result);
+            return result != null ? Result<BusinessProfile>.Success(result) : Result<BusinessProfile>.Failure(new ApplicationRequestError{ Type = ErrorType.NotFound, Field = "Email" });
         }
     }
 }

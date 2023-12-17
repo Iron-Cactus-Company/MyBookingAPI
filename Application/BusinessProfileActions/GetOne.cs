@@ -1,4 +1,6 @@
 using Application.Core;
+using Application.Core.Error;
+using Application.Core.Error.Enums;
 using Domain;
 using MediatR;
 using Persistence;
@@ -24,8 +26,7 @@ public class GetOne
         public async Task<Result<BusinessProfile>> Handle(Query request, CancellationToken cancellationToken)
         {
            var result = await _context.BusinessProfile.FindAsync(request.Id);
-           
-           return Result<BusinessProfile>.Success(result);
+           return result != null ? Result<BusinessProfile>.Success(result) : Result<BusinessProfile>.Failure(new ApplicationRequestError{ Type = ErrorType.NotFound, Field = "Id" });
         }
     }
 }

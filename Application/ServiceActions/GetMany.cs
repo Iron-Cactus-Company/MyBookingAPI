@@ -1,4 +1,6 @@
 using Application.Core;
+using Application.Core.Error;
+using Application.Core.Error.Enums;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +24,7 @@ public class GetMany
         public async Task<Result<List<Service>>> Handle(Query request, CancellationToken cancellationToken)
         {
             var result = await _context.Service.ToListAsync();
-            return Result<List<Service>>.Success(result);
+            return result.Count() != 0 ? Result<List<Service>>.Success(result) : Result<List<Service>>.Failure(new ApplicationRequestError{ Type = ErrorType.NotFound });
         }
     }
 }

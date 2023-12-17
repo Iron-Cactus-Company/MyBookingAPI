@@ -1,4 +1,6 @@
 using Application.Core;
+using Application.Core.Error;
+using Application.Core.Error.Enums;
 using Domain;
 using MediatR;
 using Persistence;
@@ -25,7 +27,7 @@ public class GetOne
         {
            var result = await _context.OpeningHours.FindAsync(request.Id);
            
-           return Result<OpeningHours>.Success(result);
+           return result != null ? Result<OpeningHours>.Success(result) : Result<OpeningHours>.Failure(new ApplicationRequestError{ Type = ErrorType.NotFound, Field = "Id" });
         }
     }
 }
