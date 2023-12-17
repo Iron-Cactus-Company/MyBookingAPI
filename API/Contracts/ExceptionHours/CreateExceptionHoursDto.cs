@@ -22,6 +22,6 @@ namespace API.Contracts.ExceptionHours
        
         [Required(ErrorMessage = "OpeningHoursId is required")]
         [GuidValidation]
-        public Guid OpeningHoursId { get; set; }
+        public string OpeningHoursId { get; set; }
     }
 }

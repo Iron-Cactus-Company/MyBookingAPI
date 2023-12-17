@@ -23,6 +23,6 @@ namespace API.Contracts.Service
         public float Price { get; set; }
         
         [GuidValidation]
-        public Guid CompanyId { get; set; }
+        public string CompanyId { get; set; }
     }
 }

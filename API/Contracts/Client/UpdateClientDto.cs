@@ -18,7 +18,7 @@
         [MinLength(6, ErrorMessage = "Password must be at least 6 characters long")]
         public string Password { get; set; }
         
-        [CustomPhoneValidation(SupportedRegion.Finland , ErrorMessage = "Invalid Finnish number")]
+        //[CustomPhoneValidation(SupportedRegion.Finland , ErrorMessage = "Invalid Finnish number")]
         public string Phone { get; set; }
     }
 }

@@ -15,9 +15,9 @@ public class CreateBookingDto
 
     [Required(ErrorMessage = "ServiceId is required")]
     [GuidValidation]
-    public Guid ServiceId { get; set; }
+    public string ServiceId { get; set; }
 
     [Required(ErrorMessage = "ClientId is required")]
     [GuidValidation]
-    public Guid ClientId { get; set; }
+    public string ClientId { get; set; }
 }

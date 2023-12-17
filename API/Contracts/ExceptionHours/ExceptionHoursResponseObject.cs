@@ -10,5 +10,5 @@ public class ExceptionHoursResponseObject
     
     public int Type { get; set; }
     
-    public Guid OpeningHoursId { get; set; }
+    public string OpeningHoursId { get; set; }
 }

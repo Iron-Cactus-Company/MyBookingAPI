@@ -23,6 +23,6 @@ namespace API.Contracts.Service
         
         [Required(ErrorMessage = "CompanyId is required")]
         [GuidValidation]
-        public Guid CompanyId { get; set; }
+        public string CompanyId { get; set; }
     }
 }

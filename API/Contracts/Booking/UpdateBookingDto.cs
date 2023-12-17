@@ -18,8 +18,8 @@ public class UpdateBookingDto
     public int Status { get; set; }
     
     [GuidValidation]
-    public Guid ServiceId { get; set; }
+    public string ServiceId { get; set; }
 
     [GuidValidation]
-    public Guid ClientId { get; set; }
+    public string ClientId { get; set; }
 }

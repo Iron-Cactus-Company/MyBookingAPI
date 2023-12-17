@@ -17,7 +17,7 @@
         [StringLength(30, MinimumLength = 6, ErrorMessage = "{0} must be between {2} and {1} character(s) in length.")]
         public string Password { get; set; }
         
-        [CustomPhoneValidation(SupportedRegion.Finland , ErrorMessage = "Invalid Finnish number")]
+        //[CustomPhoneValidation(SupportedRegion.Finland , ErrorMessage = "Invalid Finnish number")]
         public string Phone { get; set; }
     }
 }

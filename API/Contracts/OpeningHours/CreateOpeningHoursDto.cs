@@ -63,6 +63,6 @@ namespace API.Contracts.OpeningHours
 
         [Required(ErrorMessage = "CompanyId is required")]
         [GuidValidation]
-        public Guid CompanyId { get; set; }
+        public string CompanyId { get; set; }
     }
 }
