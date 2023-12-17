@@ -1,6 +1,5 @@
 using API.Service;
 using Application.BusinessProfileActions;
-using Application.Core;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -24,7 +23,7 @@ public static class ApplicationServiceExtensions
         //Should be one time thing, all mediators will be registered
         services.AddMediatR(config => config.RegisterServicesFromAssembly(typeof(GetMany.Handler).Assembly));
         //Add automapper for update requests
-        services.AddAutoMapper(typeof(MappingProfiles).Assembly);
+        //services.AddAutoMapper(typeof(MappingProfiles).Assembly);
         services.AddScoped<PermissionHelper>();
 
         return services;
