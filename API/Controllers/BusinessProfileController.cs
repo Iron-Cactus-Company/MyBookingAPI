@@ -1,18 +1,18 @@
 using API.Contracts.BusinessProfile;
 using Application.BusinessProfileActions;
+using Application.Core.Error.Enums;
 using AutoMapper;
 using Domain;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
 public class BusinessProfileController : BaseApiController{
-    private readonly IMapper _mapper;
         
-    public BusinessProfileController(IMapper mapper)
+    public BusinessProfileController()
     {
-        _mapper = mapper;
     }
     
     // [HttpGet]
@@ -25,18 +25,17 @@ public class BusinessProfileController : BaseApiController{
     // }
     
     [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetActivityById([FromRoute] Guid id)
+    public async Task<IActionResult> GetProfileById([FromRoute] Guid id)
     {
         var result = await Mediator.Send(new GetOne.Query{ Id = id });
-        if (result.Value == null)
-            return NotFound();
+        if (result.Error.Type == ErrorType.NotFound)
+            return NotFound(result.Error);
 
         //Only owner may read
         if (!IsProfileOwner(id))
             return Unauthorized();
         
-        var serializedResult = _mapper.Map<BusinessProfileResponseObject>(result.Value);
-        return Ok(serializedResult);
+        return HandleReadResponse<BusinessProfile, BusinessProfileResponseObject>(result);
     }
     
     [AllowAnonymous]
@@ -45,13 +44,10 @@ public class BusinessProfileController : BaseApiController{
     {
         var result = await Mediator.Send(new Create.Command
         {
-            BusinessProfile = _mapper.Map<BusinessProfile>(createBusinessProfileDto)
+            BusinessProfile = Mapper.Map<BusinessProfile>(createBusinessProfileDto)
         });
-        if (!result.IsSuccess)
-        {
-            return Conflict();
-        }
-        return Ok();
+        
+        return HandleCreateResponse(result);
     }
     
     [HttpPut]
@@ -63,15 +59,10 @@ public class BusinessProfileController : BaseApiController{
        
         var result = await Mediator.Send(new Update.Command
         {
-            BusinessProfile = _mapper.Map<BusinessProfile>(updateBusinessProfileDto)
+            BusinessProfile = Mapper.Map<BusinessProfile>(updateBusinessProfileDto)
         });
             
-        if (!result.IsSuccess)
-        {
-            return Conflict();
-        }
-        return Ok();
-        
+        return HandleUpdateResponse(result);
     }
 
     [HttpDelete("{id:guid}")]
@@ -81,13 +72,9 @@ public class BusinessProfileController : BaseApiController{
         if (!IsProfileOwner(id))
             return Unauthorized();
         
-        //todo fix internal error 500 when notfound
         var result = await Mediator.Send(new Delete.Command{ Id = id});
-        if (!result.IsSuccess)
-        {
-            return Conflict();
-        }
-        return NoContent();
+        
+        return HandleDeleteResponse(result);
     }
 
     private bool IsProfileOwner(Guid requestId)

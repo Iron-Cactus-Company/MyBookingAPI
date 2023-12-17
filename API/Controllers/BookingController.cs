@@ -1,6 +1,8 @@
 ﻿using API.Contracts.Booking;
 using API.Service;
 using Application.BookingActions;
+using Application.Core.Error;
+using Application.Core.Error.Enums;
 using AutoMapper;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
@@ -19,32 +21,28 @@ namespace API.Controllers
             _permissionHelper = permissionHelper;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetMany()
-        {
-            var result = await Mediator.Send(new GetMany.Query());
-            var serializedResult = _mapper.Map<IList<BookingResponseObject>>(result.Value);
-            
-            return Ok(serializedResult);
-        }
+        // [HttpGet]
+        // public async Task<IActionResult> GetMany()
+        // {
+        //     var result = await Mediator.Send(new GetMany.Query());
+        //     return HandleReadResponse<List<Booking>, List<BookingResponseObject>>(result);
+        // }
 
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> Get(Guid id)
         {
             var booking = await Mediator.Send(new GetOne.Query{ Id = id });
+            if (booking.Error.Type == ErrorType.NotFound)
+                return NotFound(booking.Error);
             var service = await Mediator.Send(new Application.ServiceActions.GetOne.Query{ Id = booking.Value.ServiceId });
+            if (service.Error.Type == ErrorType.NotFound)
+                return NotFound(service.Error.Field = "ServiceId");
             if (! await _permissionHelper.IsCompanyOwner(GetLoggedUserId(), service.Value.CompanyId))
                 return Unauthorized();
 
             var result = await Mediator.Send(new GetOne.Query { Id = id });
 
-            if (result.Value == null)
-            {
-                return NotFound();
-            }
-            var serializedResult = _mapper.Map<BookingResponseObject>(result.Value);
-            
-            return Ok(serializedResult);
+            return HandleReadResponse<Booking, BookingResponseObject>(result);
         }
 
         [HttpPost]
@@ -55,19 +53,18 @@ namespace API.Controllers
                 Booking = _mapper.Map<Booking>(createBookingDto)
             });
 
-            if (!result.IsSuccess)
-            {
-                return Conflict();
-            }
-
-            return Ok();
+            return HandleCreateResponse(result);
         }
 
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateBookingDto updateBookingDto)
         {
             var booking = await Mediator.Send(new GetOne.Query{ Id = new Guid(updateBookingDto.Id) });
+            if (booking.Error.Type == ErrorType.NotFound)
+                return NotFound(booking.Error);
             var service = await Mediator.Send(new Application.ServiceActions.GetOne.Query{ Id = booking.Value.ServiceId });
+            if (service.Error.Type == ErrorType.NotFound)
+                return NotFound(service.Error.Field = "ServiceId");
             if (! await _permissionHelper.IsCompanyOwner(GetLoggedUserId(), service.Value.CompanyId))
                 return Unauthorized();
             
@@ -76,30 +73,24 @@ namespace API.Controllers
                 Booking = _mapper.Map<Booking>(updateBookingDto)
             });
 
-            if (!result.IsSuccess)
-            {
-                return Conflict();
-            }
-
-            return Ok();
+            return HandleUpdateResponse(result);
         }
 
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var booking = await Mediator.Send(new GetOne.Query{ Id = id });
+            if (booking.Error.Type == ErrorType.NotFound)
+                return NotFound(booking.Error);
             var service = await Mediator.Send(new Application.ServiceActions.GetOne.Query{ Id = booking.Value.ServiceId });
+            if (service.Error.Type == ErrorType.NotFound)
+                return NotFound(service.Error.Field = "ServiceId");
             if (! await _permissionHelper.IsCompanyOwner(GetLoggedUserId(), service.Value.CompanyId))
                 return Unauthorized();
             
             var result = await Mediator.Send(new Delete.Command { Id = id });
 
-            if (!result.IsSuccess)
-            {
-                return Conflict();
-            }
-
-            return NoContent();
+            return HandleDeleteResponse(result);
         }
     }
 }

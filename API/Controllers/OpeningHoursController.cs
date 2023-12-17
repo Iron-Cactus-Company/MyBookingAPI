@@ -1,9 +1,11 @@
 ﻿using API.Contracts.OpeningHours;
 using API.Service;
+using Application.Core.Error.Enums;
 using Application.OpeningHoursActions;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Domain;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
@@ -18,28 +20,20 @@ namespace API.Controllers
             _mapper = mapper;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetMany()
         {
             var result = await Mediator.Send(new GetMany.Query());
-            var serializedResult = _mapper.Map<IList<OpeningHoursResponseObject>>(result.Value);
-
-            return Ok(serializedResult);
+            return HandleReadResponse<List<OpeningHours>, List<OpeningHoursResponseObject>>(result);
         }
 
+        [AllowAnonymous]
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> Get(Guid id)
         {
             var result = await Mediator.Send(new GetOne.Query { Id = id });
-
-            if (result.Value == null)
-            {
-                return NotFound();
-            }
-
-            var serializedResult = _mapper.Map<OpeningHoursResponseObject>(result.Value);
-
-            return Ok(serializedResult);
+            return HandleReadResponse<OpeningHours, OpeningHoursResponseObject>(result);
         }
 
         [HttpPost]
@@ -53,18 +47,15 @@ namespace API.Controllers
                 OpeningHours = _mapper.Map<OpeningHours>(createOpeningHoursDto)
             });
 
-            if (!result.IsSuccess)
-            {
-                return Conflict();
-            }
-
-            return Ok();
+            return HandleCreateResponse(result);
         }
 
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateOpeningHoursDto updateOpeningHoursDto)
         {
             var openingHours = await Mediator.Send(new GetOne.Query{ Id = new Guid(updateOpeningHoursDto.Id) });
+            if (openingHours.Error.Type == ErrorType.NotFound)
+                return NotFound(openingHours.Error);
             if (! await _permissionHelper.IsCompanyOwner(GetLoggedUserId(), openingHours.Value.CompanyId))
                 return Unauthorized();
             
@@ -73,29 +64,20 @@ namespace API.Controllers
                 OpeningHours = _mapper.Map<OpeningHours>(updateOpeningHoursDto)
             });
 
-            if (!result.IsSuccess)
-            {
-                return Conflict();
-            }
-
-            return Ok();
+            return HandleUpdateResponse(result);
         }
 
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var openingHours = await Mediator.Send(new GetOne.Query{ Id = id });
+            if (openingHours.Error.Type == ErrorType.NotFound)
+                return NotFound(openingHours.Error);
             if (! await _permissionHelper.IsCompanyOwner(GetLoggedUserId(), openingHours.Value.CompanyId))
                 return Unauthorized();
             
             var result = await Mediator.Send(new Delete.Command { Id = id });
-
-            if (!result.IsSuccess)
-            {
-                return Conflict();
-            }
-
-            return NoContent();
+            return HandleDeleteResponse(result);
         }
     }
 }

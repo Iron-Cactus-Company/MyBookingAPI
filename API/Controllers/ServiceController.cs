@@ -1,8 +1,9 @@
 ﻿using API.Contracts.Service;
-using API.Service; // Замените на нужные вам using'и
+using API.Service;
+using Application.Core.Error.Enums;
 using Application.ServiceActions;
 using AutoMapper;
-
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -20,28 +21,20 @@ namespace API.Controllers
             _permissionHelper = permissionHelper;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetMany()
         {
             var result = await Mediator.Send(new GetMany.Query());
-            var serializedResult = _mapper.Map<IList<ServiceResponseObject>>(result.Value);
-
-            return Ok(serializedResult);
+            return HandleReadResponse<List<Domain.Service>, List<ServiceResponseObject>>(result);
         }
 
+        [AllowAnonymous]
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> Get(Guid id)
         {
             var result = await Mediator.Send(new GetOne.Query { Id = id });
-
-            if (result.Value == null)
-            {
-                return NotFound();
-            }
-
-            var serializedResult = _mapper.Map<ServiceResponseObject>(result.Value);
-
-            return Ok(serializedResult);
+            return HandleReadResponse<Domain.Service, ServiceResponseObject>(result);
         }
 
         [HttpPost]
@@ -55,18 +48,15 @@ namespace API.Controllers
                 Service = _mapper.Map<Domain.Service>(createServiceDto)
             });
 
-            if (!result.IsSuccess)
-            {
-                return Conflict();
-            }
-
-            return Ok();
+            return HandleCreateResponse(result);
         }
 
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateServiceDto updateServiceDto)
         {
             var service = await Mediator.Send(new GetOne.Query{ Id = new Guid(updateServiceDto.Id) });
+            if (service.Error.Type == ErrorType.NotFound)
+                return NotFound(service.Error);
             if (! await _permissionHelper.IsCompanyOwner(GetLoggedUserId(), service.Value.CompanyId))
                 return Unauthorized();
             
@@ -75,28 +65,20 @@ namespace API.Controllers
                 Service = _mapper.Map<Domain.Service>(updateServiceDto)
             });
 
-            if (!result.IsSuccess)
-            {
-                return Conflict();
-            }
-
-            return Ok();
+            return HandleUpdateResponse(result);
         }
 
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var service = await Mediator.Send(new GetOne.Query{ Id = id });
+            if (service.Error.Type == ErrorType.NotFound)
+                return NotFound(service.Error);
             if (! await _permissionHelper.IsCompanyOwner(GetLoggedUserId(), service.Value.CompanyId))
                 return Unauthorized();
+            
             var result = await Mediator.Send(new Delete.Command { Id = id });
-
-            if (!result.IsSuccess)
-            {
-                return Conflict();
-            }
-
-            return NoContent();
+            return HandleDeleteResponse(result);
         }
     }
 }

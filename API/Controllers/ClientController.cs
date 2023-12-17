@@ -3,7 +3,7 @@ using Application.BookingActions;
 using Application.ServiceActions;
 using AutoMapper;
 using Domain;
-
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Create = Application.ClientActions.Create;
 using Delete = Application.ClientActions.Delete;
@@ -50,27 +50,15 @@ namespace API.Controllers
         // }
         
 
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateClientDto createClientDto)
         {
-            // todo result returns empty value 
             var result = await Mediator.Send(new Create.Command
             {
                 Client = _mapper.Map<Client>(createClientDto)
             });
-            
-            
-            if (!result.IsSuccess)
-            {
-                return Conflict();
-            }
-
-          
-            return Ok(result);
-
-            // var serializedResult = _mapper.Map<ClientResponseObject>(result.Value);
-            //
-            // return CreatedAtAction(nameof(Get), new { id = serializedResult.Id }, serializedResult);
+            return HandleCreateResponse(result);
         }
 
         // [HttpPut]
@@ -78,7 +66,7 @@ namespace API.Controllers
         // {
         //     var result = await Mediator.Send(new Update.Command
         //     {
-        //         // todo doesnt work
+        //         
         //         // Client = _mapper.Map<Client>(updateClientDto)
         //         
         //     });
@@ -95,7 +83,7 @@ namespace API.Controllers
         // [HttpDelete("{id:guid}")]
         // public async Task<IActionResult> Delete(Guid id)
         // {
-        //     //todo fix internal error 500 when notfound
+        //     
         //     var result = await Mediator.Send(new Delete.Command{ Id = id});
         //     if (!result.IsSuccess)
         //     {
