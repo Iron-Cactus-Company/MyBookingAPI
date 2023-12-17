@@ -25,7 +25,7 @@ public class Create
 
         public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
         {
-            var isOpeningHoursExists = await GuidHandler.IsEntityExists<BusinessProfile>(request.Service.CompanyId, _context);
+            var isOpeningHoursExists = await GuidHandler.IsEntityExists<Company>(request.Service.CompanyId, _context);
             if(!isOpeningHoursExists)
                 return Result<Unit>.Failure(new ApplicationRequestError{ Field = "CompanyId", Type = ErrorType.NotFound});
             

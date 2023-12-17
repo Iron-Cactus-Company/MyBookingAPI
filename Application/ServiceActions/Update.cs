@@ -30,7 +30,7 @@ public class Update
         {
             if (!GuidHandler.IsGuidNull(request.Service.CompanyId))
             {
-                var isOpeningHoursExists = await GuidHandler.IsEntityExists<BusinessProfile>(request.Service.CompanyId, _context);
+                var isOpeningHoursExists = await GuidHandler.IsEntityExists<Company>(request.Service.CompanyId, _context);
                 if(!isOpeningHoursExists)
                     return Result<Unit>.Failure(new ApplicationRequestError{ Field = "CompanyId", Type = ErrorType.NotFound});
             }
