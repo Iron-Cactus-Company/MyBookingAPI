@@ -31,7 +31,8 @@ public class Update
         {
             if (!string.IsNullOrEmpty(request.BusinessProfile.Email))
             {
-                var isNotUnique = await _context.BusinessProfile.FirstOrDefaultAsync(item => item.Email == request.BusinessProfile.Email) != null;
+                var isNotUnique = await _context.BusinessProfile
+                    .FirstOrDefaultAsync(item => item.Email == request.BusinessProfile.Email && item.Id != request.BusinessProfile.Id) != null;
                 if(isNotUnique)
                     return Result<Unit>.Failure(new ApplicationRequestError{ Field = "Email", Type = ErrorType.NotUnique });
             }
