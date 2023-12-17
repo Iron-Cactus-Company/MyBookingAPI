@@ -3,6 +3,7 @@ using API.Service;
 using Application.BookingActions;
 using Application.Core.Error;
 using Application.Core.Error.Enums;
+using Application.DTOs;
 using AutoMapper;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +26,7 @@ namespace API.Controllers
         // public async Task<IActionResult> GetMany()
         // {
         //     var result = await Mediator.Send(new GetMany.Query());
-        //     return HandleReadResponse<List<Booking>, List<BookingResponseObject>>(result);
+        //     return HandleReadResponse<List<BookingDto>, List<BookingResponseObject>>(result);
         // }
 
         [HttpGet("{id:guid}")]
@@ -42,7 +43,7 @@ namespace API.Controllers
 
             var result = await Mediator.Send(new GetOne.Query { Id = id });
 
-            return HandleReadResponse<Booking, BookingResponseObject>(result);
+            return HandleReadResponse<BookingDto, BookingResponseObject>(result);
         }
 
         [HttpPost]
