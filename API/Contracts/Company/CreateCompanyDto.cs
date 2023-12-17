@@ -29,5 +29,9 @@
         [StringLength(200, MinimumLength = 3, ErrorMessage = "{0} must be between {2} and {1} character(s) in length.")]
         [Required(ErrorMessage = "Cancelling time message is required")]
         public string CancellingTimeMessage { get; set; }
+        
+        [Required(ErrorMessage = "BusinessProfileId is required")]
+        [GuidValidation]
+        public string BusinessProfileId { get; set; }
     }
 }
