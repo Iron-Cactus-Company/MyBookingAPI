@@ -10,5 +10,4 @@ public class ServiceResponseObject
     public int Price { get; set; }
     
     public Guid CompanyId { get; set; }
-    public Company Company { get; set; }
 }

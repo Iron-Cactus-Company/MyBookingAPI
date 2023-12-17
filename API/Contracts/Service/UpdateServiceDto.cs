@@ -19,7 +19,7 @@ namespace API.Contracts.Service
         [Range(1, 86400, ErrorMessage = "Duration must be between 0 and 24")]
         public int Duration { get; set; }
         
-        [Range(0, float.MaxValue, ErrorMessage = "Wrong float number")]
+        [Range(0, float.MaxValue, ErrorMessage = "Price must be a positive float number")]
         public float Price { get; set; }
         
         [GuidValidation]

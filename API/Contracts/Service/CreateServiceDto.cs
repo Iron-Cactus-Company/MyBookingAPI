@@ -14,11 +14,11 @@ namespace API.Contracts.Service
         public string Description { get; set; }
         
         [Required(ErrorMessage = "Duration is required")]
-        [Range(1, 86400, ErrorMessage = "Duration must be between 1 and 24")]
+        [Range(1, 86400, ErrorMessage = "Duration must be between 1 and 86400")]
         public int Duration { get; set; }
         
         [Required(ErrorMessage = "Price is required")]
-        [Range(0, float.MaxValue, ErrorMessage = "Wrong  float number")]
+        [Range(0, float.MaxValue, ErrorMessage = "Price must be a positive float number")]
         public float Price { get; set; }
         
         [Required(ErrorMessage = "CompanyId is required")]
