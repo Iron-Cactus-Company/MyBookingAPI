@@ -23,7 +23,8 @@ public class MappingProfile : Profile
        
         
         CreateMap <CreateCompanyDto, Company>();
-        CreateMap<UpdateCompanyDto, Company>();
+        CreateMap<UpdateCompanyDto, Company>()
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         CreateMap<Company, CompanyResponseObject>();
         
         
@@ -54,7 +55,35 @@ public class MappingProfile : Profile
         CreateMap<UpdateExceptionHoursDto, ExceptionHours>();
         CreateMap<ExceptionHours, ExceptionHoursResponseObject>();
         
-        
+        //Application layer mappings
+        CreateMap<BusinessProfile, BusinessProfile>()
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => 
+                srcMember != null && !(srcMember is Guid guid && guid == Guid.Empty)
+            ));;
+        CreateMap<Company, Company>()
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => 
+                srcMember != null && !(srcMember is Guid guid && guid == Guid.Empty)
+            ));
+        CreateMap<OpeningHours, OpeningHours>()
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => 
+                srcMember != null && !(srcMember is Guid guid && guid == Guid.Empty)
+            ));;
+        CreateMap<ExceptionHours, ExceptionHours>()
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => 
+                srcMember != null && !(srcMember is Guid guid && guid == Guid.Empty)
+            ));;
+        CreateMap<Domain.Service, Domain.Service>()
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => 
+                srcMember != null && !(srcMember is Guid guid && guid == Guid.Empty)
+            ));;
+        CreateMap<Booking, Booking>()
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => 
+                srcMember != null && !(srcMember is Guid guid && guid == Guid.Empty)
+            ));;
+        CreateMap<Client, Client>()
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => 
+                srcMember != null && !(srcMember is Guid guid && guid == Guid.Empty)
+            ));;
     }
 }
 
