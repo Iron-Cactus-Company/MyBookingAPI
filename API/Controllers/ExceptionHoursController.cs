@@ -40,7 +40,7 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateExceptionHoursDto createExceptionHoursDto)
         {
-            var openingHours = await Mediator.Send(new Application.OpeningHoursActions.GetOne.Query{ Id = createExceptionHoursDto.OpeningHoursId });
+            var openingHours = await Mediator.Send(new Application.OpeningHoursActions.GetOne.Query{ Id = new Guid(createExceptionHoursDto.OpeningHoursId) });
             if (openingHours.Error.Type == ErrorType.NotFound)
                 return NotFound(openingHours.Error.Field = "OpeningHoursId");
             
