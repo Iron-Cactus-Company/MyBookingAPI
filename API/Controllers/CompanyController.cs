@@ -7,6 +7,7 @@ using AutoMapper;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace API.Controllers
 {
@@ -26,12 +27,15 @@ namespace API.Controllers
         [OffsetPaginator]
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> GetMany()
+        public async Task<IActionResult> GetMany([FromQuery] string name)
         {
             var limit = (int)HttpContext.Items["limit"];
             var page = (int)HttpContext.Items["page"];
             
-            var result = await Mediator.Send(new GetMany.Query{ Options = new ReadOptions{ Limit = limit, PageNumber = page} });
+            var result = name.IsNullOrEmpty() ?
+                await Mediator.Send(new GetMany.Query{ Options = new ReadOptions{ Limit = limit, PageNumber = page} }) :
+                await Mediator.Send(new FindByName.Query { Name = name, Options = new ReadOptions { Limit = limit, PageNumber = page } });
+            
             return HandleReadResponse<List<Company>, List<CompanyResponseObject>>(result);
         }
         

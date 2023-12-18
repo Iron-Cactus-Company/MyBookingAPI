@@ -6,12 +6,11 @@ namespace Application.Core;
 
 public class OffsetPaginator<T> where T : class, IEntityWithId
 {
-    public IQueryable<T> Paginate(DbSet<T> dbSet, int pageNumber, int limit)
+    public IQueryable<T> Paginate(IQueryable<T> dbSet, int pageNumber, int limit)
     {
         var currentPosition = (pageNumber-1)*limit >= 0 ? (pageNumber-1)*limit : 0;
 
         return dbSet
-            .AsQueryable()
             .OrderBy(item => item.Id)
             .Skip(currentPosition)
             .Take(limit);
