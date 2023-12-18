@@ -10,11 +10,15 @@ namespace Application.OpeningHoursActions;
 
 public class GetMany
 {
-    public class Query : IRequest<Result<List<OpeningHours>>>{}
+    public class Query : IRequest<Result<List<OpeningHours>>>
+    {
+        public ReadOptions? Options { get; init; }
+    }
     
     public class Handler : IRequestHandler<Query, Result<List<OpeningHours>>>
     {
         private readonly DataContext _context;
+        private readonly OffsetPaginator<OpeningHours> _offsetPaginator = new ();
 
         public Handler(DataContext context)
         {
@@ -23,7 +27,10 @@ public class GetMany
         
         public async Task<Result<List<OpeningHours>>> Handle(Query request, CancellationToken cancellationToken)
         {
-            var result = await _context.OpeningHours.ToListAsync();
+            var (page, pageSize) = _offsetPaginator.DeterminePageNumberAndSize(request.Options);
+
+            var result = await _offsetPaginator.Paginate(_context.OpeningHours, page, pageSize).ToListAsync();
+            
             return result.Count() != 0 ? Result<List<OpeningHours>>.Success(result) : Result<List<OpeningHours>>.Failure(new ApplicationRequestError{ Type = ErrorType.NotFound });
         }
     }

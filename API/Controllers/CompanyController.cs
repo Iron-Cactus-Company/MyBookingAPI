@@ -1,6 +1,8 @@
-﻿using API.Contracts.Company;
+﻿using API.Attributes;
+using API.Contracts.Company;
 using API.Service;
 using Application.CompanyActions;
+using Application.Core;
 using AutoMapper;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
@@ -21,11 +23,15 @@ namespace API.Controllers
             _permissionHelper = permissionHelper;
         }
         
+        [OffsetPaginator]
         [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetMany()
         {
-            var result = await Mediator.Send(new GetMany.Query());
+            var limit = (int)HttpContext.Items["limit"];
+            var page = (int)HttpContext.Items["page"];
+            
+            var result = await Mediator.Send(new GetMany.Query{ Options = new ReadOptions{ Limit = limit, PageNumber = page} });
             return HandleReadResponse<List<Company>, List<CompanyResponseObject>>(result);
         }
         

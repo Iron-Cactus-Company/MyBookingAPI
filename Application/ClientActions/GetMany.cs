@@ -10,11 +10,15 @@ namespace Application.ClientActions;
 
 public class GetMany
 {
-    public class Query : IRequest<Result<List<Client>>>{}
+    public class Query : IRequest<Result<List<Client>>>
+    {
+        public ReadOptions? Options { get; init; }
+    }
     
     public class Handler : IRequestHandler<Query, Result<List<Client>>>
     {
         private readonly DataContext _context;
+        private readonly OffsetPaginator<Client> _offsetPaginator = new ();
 
         public Handler(DataContext context)
         {
@@ -23,7 +27,10 @@ public class GetMany
         
         public async Task<Result<List<Client>>> Handle(Query request, CancellationToken cancellationToken)
         {
-            var result = await _context.Client.ToListAsync();
+            var (page, pageSize) = _offsetPaginator.DeterminePageNumberAndSize(request.Options);
+
+            var result = await _offsetPaginator.Paginate(_context.Client, page, pageSize).ToListAsync();
+            
             return result.Count() != 0 ? Result<List<Client>>.Success(result) : Result<List<Client>>.Failure(new ApplicationRequestError{ Type = ErrorType.NotFound });
         }
     }

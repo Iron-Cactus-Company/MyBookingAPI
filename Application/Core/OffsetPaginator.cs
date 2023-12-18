@@ -1,17 +1,33 @@
+using Domain;
 using Microsoft.EntityFrameworkCore;
+//using System.Linq.Dynamic.Core;
 
 namespace Application.Core;
 
-public class OffsetPaginator<T> where T : class
+public class OffsetPaginator<T> where T : class, IEntityWithId
 {
-    public async Task<List<T>> paginate(DbSet<T> dbSet, int pageNumber, int limit)
+    public IQueryable<T> Paginate(DbSet<T> dbSet, int pageNumber, int limit)
     {
-        var currentPosition = pageNumber*limit;
+        var currentPosition = (pageNumber-1)*limit >= 0 ? (pageNumber-1)*limit : 0;
 
-        return await dbSet
-            //.OrderBy(item => item.Id)
+        return dbSet
+            .AsQueryable()
+            .OrderBy(item => item.Id)
             .Skip(currentPosition)
-            .Take(limit)
-            .ToListAsync();
+            .Take(limit);
+    }
+
+    public (int pageNumber, int limit) DeterminePageNumberAndSize(ReadOptions? options)
+    {
+        int defaultLimit = 20;
+        if (options is null)
+        {
+            return (1, defaultLimit);
+        }
+        
+        var pageNumber = options.PageNumber is null ? 1 : (int)options.PageNumber;
+        var limit = options.Limit is null ? defaultLimit : (int)options.Limit;
+        
+        return (pageNumber, limit);
     }
 }

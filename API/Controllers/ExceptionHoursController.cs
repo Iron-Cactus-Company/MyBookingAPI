@@ -1,4 +1,5 @@
-﻿using API.Contracts.ExceptionHours;
+﻿using API.Attributes;
+using API.Contracts.ExceptionHours;
 using API.Service;
 using Application.Core.Error.Enums;
 using Application.ExceptionHoursActions;
@@ -21,6 +22,7 @@ namespace API.Controllers
             _permissionHelper = permissionHelper;
         }
         
+        [OffsetPaginator]
         [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetMany()

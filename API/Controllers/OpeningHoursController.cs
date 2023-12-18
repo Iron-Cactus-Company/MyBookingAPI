@@ -1,4 +1,5 @@
-﻿using API.Contracts.OpeningHours;
+﻿using API.Attributes;
+using API.Contracts.OpeningHours;
 using API.Service;
 using Application.Core.Error.Enums;
 using Application.OpeningHoursActions;
@@ -21,6 +22,7 @@ namespace API.Controllers
             _permissionHelper = permissionHelper;
         }
 
+        [OffsetPaginator]
         [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetMany()

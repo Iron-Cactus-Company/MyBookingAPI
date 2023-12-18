@@ -1,6 +1,6 @@
 namespace Domain;
 
-public class Client
+public class Client : IEntityWithId
 {
     public Guid Id { get; set; }
     public string Name { get; set; }

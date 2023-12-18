@@ -1,5 +1,7 @@
 using System.Text.Json.Serialization;
+using API.Attributes;
 using API.Extensions;
+using API.Filters;
 using API.Helpers;
 using API.Middleware;
 using Microsoft.AspNetCore.Authorization;
@@ -15,6 +17,8 @@ builder.Services.AddControllers(opt =>
     //add [Authorize] to all controllers = end points
     //In order to disable authorization use [AllowAnonymous]
     opt.Filters.Add(new AuthorizeFilter(authPolicy));
+    
+    opt.Filters.Add<OffsetPaginatorFilter>();
 });
 
 // Add services to the container.

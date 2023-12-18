@@ -27,13 +27,9 @@ public class GetMany
         
         public async Task<Result<List<BusinessProfile>>> Handle(Query request, CancellationToken cancellationToken)
         {
-            if(request.Options.PageNumber == null && request.Options.Limit == null){
-                var noPagination = await _context.BusinessProfile.ToListAsync();
-                return Result<List<BusinessProfile>>.Success(noPagination);
-            }
-            
-            var result = await _offsetPaginator
-            .paginate(_context.BusinessProfile, (int)request.Options.PageNumber, (int)request.Options.Limit);
+            var (page, pageSize) = _offsetPaginator.DeterminePageNumberAndSize(request.Options);
+
+            var result = await _offsetPaginator.Paginate(_context.BusinessProfile, page, pageSize).ToListAsync();
             
             return result.Count() != 0 ? Result<List<BusinessProfile>>.Success(result) : Result<List<BusinessProfile>>.Failure(new ApplicationRequestError{ Type = ErrorType.NotFound });
         }

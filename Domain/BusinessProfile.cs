@@ -1,6 +1,6 @@
 namespace Domain;
 
-public class BusinessProfile
+public class BusinessProfile : IEntityWithId
 {
     public Guid Id { get; set; }
     public string Email { get; set; }

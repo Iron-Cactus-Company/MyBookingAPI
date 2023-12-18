@@ -1,6 +1,6 @@
 namespace Domain;
 
-public class OpeningHours
+public class OpeningHours : IEntityWithId
 {
     public Guid Id { get; set; }
     public long MondayStart { get; set; }

@@ -1,6 +1,6 @@
 namespace Domain;
 
-public class ExceptionHours
+public class ExceptionHours : IEntityWithId
 {
     public Guid Id { get; set; }
     public long Start { get; set; }

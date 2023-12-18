@@ -1,6 +1,6 @@
 namespace Domain;
 
-public class Booking
+public class Booking : IEntityWithId
 {
     public Guid Id { get; set; }
     public long Time { get; set; }
