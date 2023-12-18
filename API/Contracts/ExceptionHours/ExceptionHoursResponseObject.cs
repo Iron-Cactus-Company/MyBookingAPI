@@ -2,6 +2,8 @@
 
 public class ExceptionHoursResponseObject
 {
+    public string Id { get; set; }
+    
     public long Start { get; set; }
     
     public long End { get; set; }

@@ -33,8 +33,9 @@ public class MappingProfile : Profile
         CreateMap<BusinessProfile, BusinessProfileResponseObject>();
         
         
-        CreateMap <CreateBookingDto, BookingDto>();
+        CreateMap <CreateBookingDto, Booking>();
         CreateMap<UpdateBookingDto, BookingDto>();
+        CreateMap <Booking, BookingResponseObject>();
         CreateMap<BookingDto, BookingResponseObject>();
         
         CreateMap <CreateServiceDto, Domain.Service>();

@@ -25,12 +25,11 @@ public class Create
 
         public async Task<Result<OpeningHours>> Handle(Command request, CancellationToken cancellationToken)
         {
-            var isOpeningHoursExists = await GuidHandler.IsEntityExists<Company>(request.OpeningHours.CompanyId, _context);
-            if(!isOpeningHoursExists)
-                return Result<OpeningHours>.Failure(new ApplicationRequestError{ Field = "CompanyId", Type = ErrorType.NotFound});
+            var isCompanyExists = await GuidHandler.IsEntityExists<Company>(request.OpeningHours.CompanyId, _context);
+            if(!isCompanyExists)
+                return Result<OpeningHours>.Failure(new ApplicationRequestError{ Field = "CompanyId", Type = ErrorType.NotFound });
             
             _context.OpeningHours.Add(request.OpeningHours);
-            var result = await _context.SaveChangesAsync() > 0;
             var resp = ResponseDeterminer.DetermineCreateResponse(await _context.SaveChangesAsync());
             if (!resp.isValid)
                 return Result<OpeningHours>.Failure(resp.error);

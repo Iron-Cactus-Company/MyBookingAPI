@@ -18,6 +18,7 @@ namespace API.Controllers
         public OpeningHoursController(IMapper mapper, PermissionHelper permissionHelper)
         {
             _mapper = mapper;
+            _permissionHelper = permissionHelper;
         }
 
         [AllowAnonymous]
@@ -39,14 +40,14 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateOpeningHoursDto createOpeningHoursDto)
         {
-            if (! await _permissionHelper.IsCompanyOwner(GetLoggedUserId(), createOpeningHoursDto.CompanyId))
+            if (!await _permissionHelper.IsCompanyOwner(GetLoggedUserId(), createOpeningHoursDto.CompanyId))
                 return Unauthorized();
             
             var result = await Mediator.Send(new Create.Command
             {
                 OpeningHours = _mapper.Map<OpeningHours>(createOpeningHoursDto)
             });
-
+            
             return HandleCreateResponse<OpeningHours, OpeningHoursResponseObject>(result);
         }
 
