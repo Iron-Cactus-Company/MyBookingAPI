@@ -52,7 +52,7 @@ namespace API.Controllers
                 ExceptionHours = _mapper.Map<ExceptionHours>(createExceptionHoursDto)
             });
             
-            return HandleCreateResponse(result);
+            return HandleCreateResponse<ExceptionHours, ExceptionHoursResponseObject>(result);
         }
 
         [HttpPut]

@@ -47,7 +47,7 @@ public class BusinessProfileController : BaseApiController{
             BusinessProfile = Mapper.Map<BusinessProfile>(createBusinessProfileDto)
         });
         
-        return HandleCreateResponse(result);
+        return HandleCreateResponse<BusinessProfile, BusinessProfileResponseObject>(result);
     }
     
     [HttpPut]

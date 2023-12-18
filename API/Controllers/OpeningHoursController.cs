@@ -47,7 +47,7 @@ namespace API.Controllers
                 OpeningHours = _mapper.Map<OpeningHours>(createOpeningHoursDto)
             });
 
-            return HandleCreateResponse(result);
+            return HandleCreateResponse<OpeningHours, OpeningHoursResponseObject>(result);
         }
 
         [HttpPut]

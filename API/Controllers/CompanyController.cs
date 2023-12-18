@@ -46,7 +46,7 @@ namespace API.Controllers
                 Company = _mapper.Map<Company>(createCompanyDto)
             });
             
-            return HandleCreateResponse(result);
+            return HandleCreateResponse<Company, CompanyResponseObject>(result);
         }
 
         [HttpPut]

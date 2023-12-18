@@ -9,12 +9,12 @@ namespace Application.OpeningHoursActions;
 
 public class Create
 { 
-    public class Command : IRequest<Result<Unit>>
+    public class Command : IRequest<Result<OpeningHours>>
     {
         public OpeningHours OpeningHours{ get; init; }
     } 
     
-    public class Handler : IRequestHandler<Command, Result<Unit>>
+    public class Handler : IRequestHandler<Command, Result<OpeningHours>>
     {
         private readonly DataContext _context;
 
@@ -23,19 +23,19 @@ public class Create
             _context = context;
         }
 
-        public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<Result<OpeningHours>> Handle(Command request, CancellationToken cancellationToken)
         {
             var isOpeningHoursExists = await GuidHandler.IsEntityExists<Company>(request.OpeningHours.CompanyId, _context);
             if(!isOpeningHoursExists)
-                return Result<Unit>.Failure(new ApplicationRequestError{ Field = "CompanyId", Type = ErrorType.NotFound});
+                return Result<OpeningHours>.Failure(new ApplicationRequestError{ Field = "CompanyId", Type = ErrorType.NotFound});
             
             _context.OpeningHours.Add(request.OpeningHours);
             var result = await _context.SaveChangesAsync() > 0;
             var resp = ResponseDeterminer.DetermineCreateResponse(await _context.SaveChangesAsync());
             if (!resp.isValid)
-                return Result<Unit>.Failure(resp.error);
+                return Result<OpeningHours>.Failure(resp.error);
             
-            return Result<Unit>.Success(Unit.Value);
+            return Result<OpeningHours>.Success(request.OpeningHours);
         }
     }
 }

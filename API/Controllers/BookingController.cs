@@ -54,7 +54,7 @@ namespace API.Controllers
                 Booking = _mapper.Map<Booking>(createBookingDto)
             });
 
-            return HandleCreateResponse(result);
+            return HandleCreateResponse<Booking, BookingResponseObject>(result);
         }
 
         [HttpPut]

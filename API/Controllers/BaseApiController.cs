@@ -32,8 +32,14 @@ public class BaseApiController : ControllerBase{
         return (ProfileType)type;
     }
 
-    protected IActionResult HandleCreateResponse<T>(Result<T> result)
+    protected IActionResult HandleCreateResponse<TResult, TResponse>(Result<TResult> result)
     {
+        if (result.Value != null)
+        {
+            var serializedResult = Mapper.Map<TResponse>(result.Value);
+            return Ok(serializedResult);
+        }
+        
         if (result.IsSuccess)
             return Created();
         

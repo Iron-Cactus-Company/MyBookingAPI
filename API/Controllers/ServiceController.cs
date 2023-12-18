@@ -48,7 +48,7 @@ namespace API.Controllers
                 Service = _mapper.Map<Domain.Service>(createServiceDto)
             });
 
-            return HandleCreateResponse(result);
+            return HandleCreateResponse<Domain.Service, ServiceResponseObject>(result);
         }
 
         [HttpPut]

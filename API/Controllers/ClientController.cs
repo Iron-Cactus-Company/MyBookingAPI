@@ -58,7 +58,7 @@ namespace API.Controllers
             {
                 Client = _mapper.Map<Client>(createClientDto)
             });
-            return HandleCreateResponse(result);
+            return HandleCreateResponse<Client, ClientResponseObject>(result);
         }
 
         // [HttpPut]
