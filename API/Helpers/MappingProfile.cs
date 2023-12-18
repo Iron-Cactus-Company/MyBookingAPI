@@ -34,7 +34,7 @@ public class MappingProfile : Profile
         
         
         CreateMap <CreateBookingDto, Booking>();
-        CreateMap<UpdateBookingDto, BookingDto>();
+        CreateMap<UpdateBookingDto, Booking>();
         CreateMap <Booking, BookingResponseObject>();
         CreateMap<BookingDto, BookingResponseObject>();
         
