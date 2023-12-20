@@ -36,7 +36,7 @@ namespace API.Controllers
                 await Mediator.Send(new GetMany.Query{ Options = new ReadOptions{ Limit = limit, PageNumber = page} }) :
                 await Mediator.Send(new FindByName.Query { Name = name, Options = new ReadOptions { Limit = limit, PageNumber = page } });
             
-            return HandleReadResponse<List<Company>, List<CompanyResponseObject>>(result);
+            return HandleReadOneResponse<List<Company>, List<CompanyResponseObject>>(result);
         }
         
         [AllowAnonymous]
@@ -44,7 +44,7 @@ namespace API.Controllers
         public async Task<IActionResult> Get(Guid id)
         {
             var result = await Mediator.Send(new GetOne.Query{ Id = id});
-            return HandleReadResponse<Company, CompanyResponseObject>(result);
+            return HandleReadOneResponse<Company, CompanyResponseObject>(result);
         }
         
 

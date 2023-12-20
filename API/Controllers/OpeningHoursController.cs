@@ -28,7 +28,7 @@ namespace API.Controllers
         public async Task<IActionResult> GetMany()
         {
             var result = await Mediator.Send(new GetMany.Query());
-            return HandleReadResponse<List<OpeningHours>, List<OpeningHoursResponseObject>>(result);
+            return HandleReadOneResponse<List<OpeningHours>, List<OpeningHoursResponseObject>>(result);
         }
 
         [AllowAnonymous]
@@ -36,7 +36,7 @@ namespace API.Controllers
         public async Task<IActionResult> Get(Guid id)
         {
             var result = await Mediator.Send(new GetOne.Query { Id = id });
-            return HandleReadResponse<OpeningHours, OpeningHoursResponseObject>(result);
+            return HandleReadOneResponse<OpeningHours, OpeningHoursResponseObject>(result);
         }
 
         [HttpPost]

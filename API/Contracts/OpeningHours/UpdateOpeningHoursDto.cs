@@ -10,47 +10,33 @@ namespace API.Contracts.OpeningHours
         [GuidValidation]
         public string Id { get; set; }
         
-        [Range(1, long.MaxValue, ErrorMessage = "MondayStart Time must be greater than 0")]
-        public long MondayStart { get; set; }
+        public string MondayStart { get; set; }
         
-        [Range(1, long.MaxValue, ErrorMessage = "MondayEnd Time must be greater than 0")]
-        public long MondayEnd { get; set; }
+        public string MondayEnd { get; set; }
         
-        [Range(1, long.MaxValue, ErrorMessage = "TuesdayStart Time must be greater than 0")]
-        public long TuesdayStart { get; set; }
+        public string TuesdayStart { get; set; }
         
-        [Range(1, long.MaxValue, ErrorMessage = "TuesdayEnd Time must be greater than 0")]
-        public long TuesdayEnd { get; set; }
+        public string TuesdayEnd { get; set; }
         
-        [Range(1, long.MaxValue, ErrorMessage = "WednesdayStart Time must be greater than 0")]
-        public long WednesdayStart { get; set; }
+        public string WednesdayStart { get; set; }
         
-        [Range(1, long.MaxValue, ErrorMessage = "WednesdayEnd Time must be greater than 0")]
-        public long WednesdayEnd { get; set; }
+        public string WednesdayEnd { get; set; }
         
-        [Range(1, long.MaxValue, ErrorMessage = "ThursdayStart Time must be greater than 0")]
-        public long ThursdayStart { get; set; }
+        public string ThursdayStart { get; set; }
         
-        [Range(1, long.MaxValue, ErrorMessage = "ThursdayEnd Time must be greater than 0")]
-        public long ThursdayEnd { get; set; }
+        public string ThursdayEnd { get; set; }
         
-        [Range(1, long.MaxValue, ErrorMessage = "FridayStart Time must be greater than 0")]
-        public long FridayStart { get; set; }
+        public string FridayStart { get; set; }
         
-        [Range(1, long.MaxValue, ErrorMessage = "FridayEnd Time must be greater than 0")]
-        public long FridayEnd { get; set; }
+        public string FridayEnd { get; set; }
         
-        [Range(1, long.MaxValue, ErrorMessage = "SaturdayStart Time must be greater than 0")]
-        public long SaturdayStart { get; set; }
+        public string SaturdayStart { get; set; }
         
-        [Range(1, long.MaxValue, ErrorMessage = "SaturdayEnd Time must be greater than 0")]
-        public long SaturdayEnd { get; set; }
+        public string SaturdayEnd { get; set; }
         
-        [Range(1, long.MaxValue, ErrorMessage = "SundayStart Time must be greater than 0")]
-        public long SundayStart { get; set; }
+        public string SundayStart { get; set; }
         
-        [Range(1, long.MaxValue, ErrorMessage = "SundayEnd Time must be greater than 0")]
-        public long SundayEnd { get; set; }
+        public string SundayEnd { get; set; }
         
     }
 }

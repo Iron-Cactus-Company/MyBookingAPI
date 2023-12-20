@@ -35,7 +35,7 @@ public class BusinessProfileController : BaseApiController{
         if (!IsProfileOwner(id))
             return Unauthorized();
         
-        return HandleReadResponse<BusinessProfile, BusinessProfileResponseObject>(result);
+        return HandleReadOneResponse<BusinessProfile, BusinessProfileResponseObject>(result);
     }
     
     [AllowAnonymous]

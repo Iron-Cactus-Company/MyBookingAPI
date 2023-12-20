@@ -5,5 +5,6 @@ public enum ErrorType
     NoError,
     NotUnique,
     NotFound,
-    NothingChanged
+    NothingChanged,
+    InvalidRequest
 }

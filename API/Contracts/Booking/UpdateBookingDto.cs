@@ -9,10 +9,12 @@ public class UpdateBookingDto
     [Required(ErrorMessage = "Id is required")]
     [GuidValidation]
     public string Id { get; set; }
-
-    [Required(ErrorMessage = "Time is required")]
-    [Range(1, long.MaxValue, ErrorMessage = "Time must be greater than 0")]
-    public long Time { get; set; }
+    
+    [Range(1, long.MaxValue, ErrorMessage = "Start must be greater than 0")]
+    public long Start { get; set; }
+    
+    [Range(1, long.MaxValue, ErrorMessage = "End must be greater than 0")]
+    public long End { get; set; }
     
     [Range(0, 2, ErrorMessage = "Status must be between 0 and 2")]
     public int Status { get; set; }

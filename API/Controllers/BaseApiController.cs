@@ -1,7 +1,7 @@
 using System.Security.Claims;
-using API.Contracts.BusinessProfile;
 using API.Enum;
 using Application.Core;
+using Application.Core.Error;
 using Application.Core.Error.Enums;
 using AutoMapper;
 using MediatR;
@@ -37,32 +37,52 @@ public class BaseApiController : ControllerBase{
         if (result.Value != null)
         {
             var serializedResult = Mapper.Map<TResponse>(result.Value);
-            return Ok(serializedResult);
+            return Ok(new ObjectResponseToClient<TResponse>{ Data = serializedResult });
         }
         
         if (result.IsSuccess)
             return Created();
+
+        var errorResp = new ObjectResponseToClient<TResponse> { Error = result.Error };
         
         if (result.Error.Type == ErrorType.NotFound)
-            return NotFound(result.Error);
+            return NotFound(errorResp);
         if (result.Error.Type == ErrorType.NotUnique)
-            return Conflict(result.Error);
+            return Conflict(errorResp);
 
-        return BadRequest();
+        return BadRequest(errorResp);
     }
     
-    protected IActionResult HandleReadResponse<TResult, TResponse>(Result<TResult> result)
+    protected IActionResult HandleReadOneResponse<TResult, TResponse>(Result<TResult> result)
     {
         if (result.IsSuccess)
         {
             var serializedResult = Mapper.Map<TResponse>(result.Value);
-            return Ok(serializedResult);
+            return Ok(new ObjectResponseToClient<TResponse>{ Data = serializedResult });
         }
         
+        var errorResp = new ObjectResponseToClient<TResponse> { Error = result.Error };
+        
         if (result.Error.Type == ErrorType.NotFound)
-            return NotFound(result.Error);
+            return NotFound(errorResp);
 
-        return BadRequest();
+        return BadRequest(errorResp);
+    }
+    
+    protected IActionResult HandleReadManyResponse<TResult, TResponse>(Result<TResult> result)
+    {
+        if (result.IsSuccess)
+        {
+            var serializedResult = Mapper.Map<TResponse>(result.Value);
+            return Ok(new ReadManyResponseToClient<TResponse>{ Data = serializedResult });
+        }
+        
+        var errorResp = new ReadManyResponseToClient<TResponse> { Error = result.Error };
+        
+        if (result.Error.Type == ErrorType.NotFound)
+            return NotFound(errorResp);
+
+        return BadRequest(errorResp);
     }
     
     protected IActionResult HandleUpdateResponse<T>(Result<T> result)
@@ -70,12 +90,14 @@ public class BaseApiController : ControllerBase{
         if (result.IsSuccess)
             return NoContent();
         
+        var errorResp = new ObjectResponseToClient<T> { Error = result.Error };
+        
         if (result.Error.Type == ErrorType.NotFound)
-            return NotFound(result.Error);
+            return NotFound(errorResp);
         if (result.Error.Type == ErrorType.NotUnique)
-            return Conflict(result.Error);
+            return Conflict(errorResp);
 
-        return BadRequest();
+        return BadRequest(errorResp);
     }
     
     protected IActionResult HandleDeleteResponse<T>(Result<T> result)
@@ -83,9 +105,23 @@ public class BaseApiController : ControllerBase{
         if (result.IsSuccess)
             return NoContent();
         
+        var errorResp = new ObjectResponseToClient<T> { Error = result.Error };
+        
         if (result.Error.Type == ErrorType.NotFound)
-            return NotFound(result.Error);
+            return NotFound(errorResp);
 
-        return BadRequest();
+        return BadRequest(errorResp);
+    }
+    
+    protected class ObjectResponseToClient<T>
+    {
+        public T Data { get; set; } = default;
+        public ApplicationRequestError Error { get; set; } = default;
+    } 
+    
+    protected class ReadManyResponseToClient<T>
+    {
+        public T Data { get; set; } = default;
+        public ApplicationRequestError Error { get; set; } = default;
     }
 }
