@@ -26,7 +26,7 @@ public class Create
 
         public async Task<Result<Client>> Handle(Command request, CancellationToken cancellationToken)
         {
-            var isNotUnique = await _context.BusinessProfile.FirstOrDefaultAsync(item => item.Email == request.Client.Email) != null;
+            var isNotUnique = await _context.Client.FirstOrDefaultAsync(item => item.Email == request.Client.Email) is not null;
             if(isNotUnique)
                 return Result<Client>.Failure(new ApplicationRequestError{ Field = "Email", Type = ErrorType.NotUnique });
             
