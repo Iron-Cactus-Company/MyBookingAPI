@@ -22,12 +22,22 @@ namespace API.Controllers
             _permissionHelper = permissionHelper;
         }
 
-        // [HttpGet]
-        // public async Task<IActionResult> GetMany()
-        // {
-        //     var result = await Mediator.Send(new GetMany.Query());
-        //     return HandleReadResponse<List<BookingDto>, List<BookingResponseObject>>(result);
-        // }
+        [HttpGet]
+        public async Task<IActionResult> GetMany([FromQuery] string companyId)
+        {
+            Guid parsedCompanyId;
+            var isValidGuid = Guid.TryParse(companyId, out parsedCompanyId);
+            if (!isValidGuid)
+                return BadRequest(
+                    new ReadManyResponseToClient<List<BookingDto>>{ Error = new ApplicationRequestError{ Field = "companyId", Type = ErrorType.InvalidRequest } }
+                    );
+            
+            if (! await _permissionHelper.IsCompanyOwner(GetLoggedUserId(), parsedCompanyId))
+                return Unauthorized();
+            
+            var result = await Mediator.Send(new FindByCompanyId.Query{ CompanyId = parsedCompanyId });
+            return HandleReadOneResponse<List<BookingDto>, List<BookingResponseObject>>(result);
+        }
 
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> Get(Guid id)
@@ -43,7 +53,7 @@ namespace API.Controllers
 
             var result = await Mediator.Send(new GetOne.Query { Id = id });
 
-            return HandleReadResponse<BookingDto, BookingResponseObject>(result);
+            return HandleReadOneResponse<BookingDto, BookingResponseObject>(result);
         }
 
         [HttpPost]
@@ -54,7 +64,7 @@ namespace API.Controllers
                 Booking = _mapper.Map<Booking>(createBookingDto)
             });
 
-            return HandleCreateResponse<Booking, BookingResponseObject>(result);
+            return HandleCreateResponse<BookingDto, BookingResponseObject>(result);
         }
 
         [HttpPut]
