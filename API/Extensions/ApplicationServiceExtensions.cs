@@ -26,6 +26,17 @@ public static class ApplicationServiceExtensions
         //services.AddAutoMapper(typeof(MappingProfiles).Assembly);
         services.AddScoped<PermissionHelper>();
         services.AddScoped<NotificationService>();
+        
+        services.AddCors(options =>
+        {
+            options.AddPolicy(name: "CORSPolicy",
+                builder =>
+                {
+                    builder.WithOrigins("http://localhost:3000")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+        });
 
         return services;
     }
