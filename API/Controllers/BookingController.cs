@@ -1,6 +1,9 @@
-﻿using API.Contracts.Booking;
+﻿using API.Attributes;
+using API.Contracts.Booking;
 using API.Service;
+using Application.AvailableHours;
 using Application.BookingActions;
+using Application.Core;
 using Application.Core.Error;
 using Application.Core.Error.Enums;
 using Application.DTOs;
@@ -22,8 +25,9 @@ namespace API.Controllers
             _permissionHelper = permissionHelper;
         }
 
+        [OffsetPaginator]
         [HttpGet]
-        public async Task<IActionResult> GetMany([FromQuery] string companyId)
+        public async Task<IActionResult> GetManyByCompanyId([FromQuery] string companyId, [FromQuery] long from, [FromQuery] long to)
         {
             Guid parsedCompanyId;
             var isValidGuid = Guid.TryParse(companyId, out parsedCompanyId);
@@ -35,7 +39,29 @@ namespace API.Controllers
             if (! await _permissionHelper.IsCompanyOwner(GetLoggedUserId(), parsedCompanyId))
                 return Unauthorized();
             
-            var result = await Mediator.Send(new FindByCompanyId.Query{ CompanyId = parsedCompanyId });
+            var limit = (int)HttpContext.Items["limit"];
+            var page = (int)HttpContext.Items["page"];
+            var options = new ReadOptions { Limit = limit, PageNumber = page };
+
+            Result<List<BookingDto>> result;
+            if (from == default && to == default)
+            {
+                result = await Mediator.Send(new FindByCompanyId.Query
+                {
+                    CompanyId = parsedCompanyId,
+                    Options = options
+                });
+            }
+            else
+            {
+                result = await Mediator.Send(new FindByInterval.Query
+                {
+                    CompanyId = parsedCompanyId, 
+                    Interval = new Interval(from, to),
+                    Options = options
+                });
+            }
+            
             return HandleReadOneResponse<List<BookingDto>, List<BookingResponseObject>>(result);
         }
 
