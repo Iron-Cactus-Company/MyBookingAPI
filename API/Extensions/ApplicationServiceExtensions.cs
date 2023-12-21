@@ -25,6 +25,7 @@ public static class ApplicationServiceExtensions
         //Add automapper for update requests
         //services.AddAutoMapper(typeof(MappingProfiles).Assembly);
         services.AddScoped<PermissionHelper>();
+        services.AddScoped<NotificationService>();
 
         return services;
     }

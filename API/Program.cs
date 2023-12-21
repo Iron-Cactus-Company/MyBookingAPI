@@ -30,6 +30,7 @@ builder.Services.AddControllers()
 });
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddAuthServices(builder.Configuration);
+builder.Services.AddEmailServices(builder.Configuration);
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
