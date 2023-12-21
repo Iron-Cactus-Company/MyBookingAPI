@@ -10,18 +10,7 @@ public class UpdateBookingDto
     [GuidValidation]
     public string Id { get; set; }
     
-    [Range(1, long.MaxValue, ErrorMessage = "Start must be greater than 0")]
-    public long Start { get; set; }
-    
-    [Range(1, long.MaxValue, ErrorMessage = "End must be greater than 0")]
-    public long End { get; set; }
-    
-    [Range(0, 2, ErrorMessage = "Status must be between 0 and 2")]
+    [Required(ErrorMessage = "Status is required")]
+    [Range(1, 2, ErrorMessage = "Status must be 1 or 2")]
     public int Status { get; set; }
-    
-    [GuidValidation]
-    public string ServiceId { get; set; }
-
-    [GuidValidation]
-    public string ClientId { get; set; }
 }

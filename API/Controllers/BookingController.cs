@@ -1,12 +1,15 @@
 ﻿using API.Attributes;
 using API.Contracts.Booking;
+using API.Enum;
 using API.Service;
+using API.Service.Email;
 using Application.AvailableHours;
 using Application.BookingActions;
 using Application.Core;
 using Application.Core.Error;
 using Application.Core.Error.Enums;
 using Application.DTOs;
+using Application.Enums;
 using AutoMapper;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
@@ -18,11 +21,13 @@ namespace API.Controllers
     {
         private readonly IMapper _mapper;
         private readonly PermissionHelper _permissionHelper;
+        private readonly NotificationService _notificationService;
 
-        public BookingController(IMapper mapper, PermissionHelper permissionHelper)
+        public BookingController(IMapper mapper, PermissionHelper permissionHelper, NotificationService notificationService)
         {
             _mapper = mapper;
             _permissionHelper = permissionHelper;
+            _notificationService = notificationService;
         }
 
         [OffsetPaginator]
@@ -85,11 +90,38 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateBookingDto createBookingDto)
         {
+            var parsedBooking = _mapper.Map<Booking>(createBookingDto);
+            parsedBooking.Status = 0;
+            
             var result = await Mediator.Send(new Create.Command
             {
-                Booking = _mapper.Map<Booking>(createBookingDto)
+                Booking = parsedBooking
             });
 
+            if (!result.IsSuccess)
+                return HandleCreateResponse<BookingDto, BookingResponseObject>(result);
+        
+            var service = await Mediator.Send(new Application.ServiceActions.GetOne.Query{ Id = result.Value.ServiceId });
+            if (service.Error.Type == ErrorType.NotFound)
+                return NotFound(service.Error.Field = "Booking.ServiceId");
+            
+            var company = await Mediator.Send(new Application.CompanyActions.GetOne.Query{ Id = service.Value.CompanyId });
+            if (company.Error.Type == ErrorType.NotFound)
+                return NotFound(service.Error.Field = "Service.CompanyId");
+        
+            var topic = _notificationService.GetNotificationTopic(NotificationType.BookingMade);
+            var content = _notificationService.GetNotificationContent(NotificationType.BookingMade, result.Value, service.Value, company.Value);
+            var receiverEmail = company.Value.Email;
+        
+            Console.WriteLine("--------------------");
+            Console.WriteLine(receiverEmail);
+            Console.WriteLine(topic);
+            Console.WriteLine(content);
+            Console.WriteLine("--------------------");
+            
+            //var message = new Message(new string[] { receiverEmail }, receiverEmail, topic, content);
+            //_emailSender.SendEmailAsync(message);
+            
             return HandleCreateResponse<BookingDto, BookingResponseObject>(result);
         }
 
@@ -99,6 +131,7 @@ namespace API.Controllers
             var booking = await Mediator.Send(new GetOne.Query{ Id = new Guid(updateBookingDto.Id) });
             if (booking.Error.Type == ErrorType.NotFound)
                 return NotFound(booking.Error);
+            
             var service = await Mediator.Send(new Application.ServiceActions.GetOne.Query{ Id = booking.Value.ServiceId });
             if (service.Error.Type == ErrorType.NotFound)
                 return NotFound(service.Error.Field = "ServiceId");
@@ -109,7 +142,34 @@ namespace API.Controllers
             {
                 Booking = _mapper.Map<Booking>(updateBookingDto)
             });
+        
+            if (!result.IsSuccess)
+                return HandleUpdateResponse(result);
+            
+            var company = await Mediator.Send(new Application.CompanyActions.GetOne.Query{ Id = service.Value.CompanyId });
+            if (company.Error.Type == ErrorType.NotFound)
+                return NotFound(service.Error.Field = "Service.CompanyId");
+            
+            var notificationType = updateBookingDto.Status == (int)BookingStatusType.Accepted
+                ? NotificationType.BookingAccepted
+                : NotificationType.BookingDeclined;
+            var topic = _notificationService.GetNotificationTopic(notificationType);
+            var content = _notificationService.GetNotificationContent(notificationType, booking.Value, service.Value, company.Value);
 
+            var client = await Mediator.Send(new Application.ClientActions.GetOne.Query{ Id = booking.Value.ClientId });
+            if (client.Error.Type == ErrorType.NotFound)
+                return NotFound(booking.Error.Field = "Booking.ClientId");
+            var receiverEmail = client.Value.Email;
+            
+            Console.WriteLine("--------------------");
+            Console.WriteLine(receiverEmail);
+            Console.WriteLine(topic);
+            Console.WriteLine(content);
+            Console.WriteLine("--------------------");
+            
+            //var message = new Message(new string[] { receiverEmail }, receiverEmail, topic, content);
+            //_emailSender.SendEmailAsync(message);
+            
             return HandleUpdateResponse(result);
         }
 

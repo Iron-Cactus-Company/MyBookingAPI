@@ -46,6 +46,12 @@ public class Update
             if (itemToUpdate == null)
                 return Result<Unit>.Failure(new ApplicationRequestError{ Field = "Id", Type = ErrorType.NotFound});
 
+            if (request.Booking.Start == 0)
+                request.Booking.Start = itemToUpdate.Start;
+            
+            if (request.Booking.End == 0)
+                request.Booking.End = itemToUpdate.End;
+            
             _mapper.Map(request.Booking, itemToUpdate);
             
             var resp = ResponseDeterminer.DetermineUpdateResponse(await _context.SaveChangesAsync());

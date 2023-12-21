@@ -33,29 +33,10 @@ public class GetOne
            var result = await _context.Booking
                .Include(item => item.Client)
                .FirstOrDefaultAsync(item => item.Id == request.Id);
-           //var result = await _context.Booking.FirstOrDefaultAsync(item => item.Id == request.Id);
 
             if(result == null)
                 return Result<BookingDto>.Failure(new ApplicationRequestError{ Type = ErrorType.NotFound, Field = "Id" });
             
-           // var client = await _context.Client
-           //     .Select(item => new {
-           //         item.Email,
-           //         item.Id,
-           //         item.Phone
-           //     })
-           //     .FirstOrDefaultAsync(item => item.Id == request.Id);
-           //
-           // if (client != null)
-           // {
-           //     result.Client = new Client
-           //     {
-           //         Email = client.Email,
-           //         Id = client.Id,
-           //         Phone = client.Phone
-           //     };
-           // }
-           
            return Result<BookingDto>.Success(_mapper.Map<BookingDto>(result));
         }
     }

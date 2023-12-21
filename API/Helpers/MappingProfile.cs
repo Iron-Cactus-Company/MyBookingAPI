@@ -34,7 +34,10 @@ public class MappingProfile : Profile
         
         
         CreateMap <CreateBookingDto, Booking>();
-        CreateMap<UpdateBookingDto, Booking>();
+        CreateMap<UpdateBookingDto, Booking>()
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => 
+                srcMember != null && !(srcMember is Guid guid && guid == Guid.Empty)
+            ));
         CreateMap <Booking, BookingResponseObject>();
         CreateMap<BookingDto, BookingResponseObject>();
         
@@ -73,9 +76,10 @@ public class MappingProfile : Profile
                 srcMember != null && !(srcMember is Guid guid && guid == Guid.Empty)
             ));
         CreateMap<Booking, Booking>()
-            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => 
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
                 srcMember != null && !(srcMember is Guid guid && guid == Guid.Empty)
             ));
+            
         CreateMap<Client, Client>()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => 
                 srcMember != null && !(srcMember is Guid guid && guid == Guid.Empty)
