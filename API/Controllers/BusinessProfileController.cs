@@ -1,9 +1,7 @@
 using API.Contracts.BusinessProfile;
 using Application.BusinessProfileActions;
 using Application.Core.Error.Enums;
-using AutoMapper;
 using Domain;
-using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,21 +13,12 @@ public class BusinessProfileController : BaseApiController{
     {
     }
     
-    // [HttpGet]
-    // public async Task<IActionResult> GetMany()
-    // {
-    //     var result = await Mediator.Send(new GetMany.Query());
-    //     var serializedResult = _mapper.Map<IList<BusinessProfileResponseObject>>(result.Value);
-    //         
-    //     return Ok(serializedResult);
-    // }
-    
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetProfileById([FromRoute] Guid id)
     {
         var result = await Mediator.Send(new GetOne.Query{ Id = id });
-        if (result.Error.Type == ErrorType.NotFound)
-            return NotFound(result.Error);
+        if (!result.IsSuccess)
+            return HandleCreateResponse<BusinessProfile, BusinessProfileResponseObject>(result);
 
         //Only owner may read
         if (!IsProfileOwner(id))
@@ -47,7 +36,7 @@ public class BusinessProfileController : BaseApiController{
             BusinessProfile = Mapper.Map<BusinessProfile>(createBusinessProfileDto)
         });
         
-        return HandleCreateResponse<BusinessProfile, BusinessProfileResponseObject>(result);
+        return HandleCreateResponse<BusinessProfile, BusinessProfile>(result);
     }
     
     [HttpPut]
@@ -72,7 +61,7 @@ public class BusinessProfileController : BaseApiController{
         if (!IsProfileOwner(id))
             return Unauthorized();
         
-        var result = await Mediator.Send(new Delete.Command{ Id = id});
+        var result = await Mediator.Send(new Delete.Command{ Id = id });
         
         return HandleDeleteResponse(result);
     }

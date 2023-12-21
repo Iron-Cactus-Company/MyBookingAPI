@@ -1,7 +1,6 @@
 ﻿using API.Attributes;
 using API.Contracts.Service;
 using API.Service;
-using Application.Core.Error.Enums;
 using Application.ServiceActions;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -57,8 +56,8 @@ namespace API.Controllers
         public async Task<IActionResult> Update([FromBody] UpdateServiceDto updateServiceDto)
         {
             var service = await Mediator.Send(new GetOne.Query{ Id = new Guid(updateServiceDto.Id) });
-            if (service.Error.Type == ErrorType.NotFound)
-                return NotFound(service.Error);
+            if (!service.IsSuccess)
+                return HandleUpdateResponse(service);
             if (! await _permissionHelper.IsCompanyOwner(GetLoggedUserId(), service.Value.CompanyId))
                 return Unauthorized();
             
@@ -74,8 +73,8 @@ namespace API.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             var service = await Mediator.Send(new GetOne.Query{ Id = id });
-            if (service.Error.Type == ErrorType.NotFound)
-                return NotFound(service.Error);
+            if (!service.IsSuccess)
+                return HandleUpdateResponse(service);
             if (! await _permissionHelper.IsCompanyOwner(GetLoggedUserId(), service.Value.CompanyId))
                 return Unauthorized();
             

@@ -38,7 +38,10 @@ namespace API.Controllers
             var isValidGuid = Guid.TryParse(companyId, out parsedCompanyId);
             if (!isValidGuid)
                 return BadRequest(
-                    new ReadManyResponseToClient<List<BookingDto>>{ Error = new ApplicationRequestError{ Field = "companyId", Type = ErrorType.InvalidRequest } }
+                    new ReadManyResponseToClient<List<BookingDto>>
+                    {
+                        Error = new ApplicationRequestError{ Field = "companyId", Type = ErrorType.InvalidRequest }
+                    }
                     );
             
             if (! await _permissionHelper.IsCompanyOwner(GetLoggedUserId(), parsedCompanyId))
@@ -74,11 +77,15 @@ namespace API.Controllers
         public async Task<IActionResult> Get(Guid id)
         {
             var booking = await Mediator.Send(new GetOne.Query{ Id = id });
-            if (booking.Error.Type == ErrorType.NotFound)
-                return NotFound(booking.Error);
+            if (!booking.IsSuccess)
+                return HandleReadOneResponse<BookingDto, BookingResponseObject>(booking);
             var service = await Mediator.Send(new Application.ServiceActions.GetOne.Query{ Id = booking.Value.ServiceId });
-            if (service.Error.Type == ErrorType.NotFound)
-                return NotFound(service.Error.Field = "ServiceId");
+            if (!service.IsSuccess)
+            {
+                service.Error.Field = "Booking.ServiceId";
+                return HandleReadOneResponse<Domain.Service, BookingResponseObject>(service);
+            }
+                
             if (! await _permissionHelper.IsCompanyOwner(GetLoggedUserId(), service.Value.CompanyId))
                 return Unauthorized();
 
@@ -102,12 +109,18 @@ namespace API.Controllers
                 return HandleCreateResponse<BookingDto, BookingResponseObject>(result);
         
             var service = await Mediator.Send(new Application.ServiceActions.GetOne.Query{ Id = result.Value.ServiceId });
-            if (service.Error.Type == ErrorType.NotFound)
-                return NotFound(service.Error.Field = "Booking.ServiceId");
+            if (!service.IsSuccess)
+            {
+                service.Error.Field = "Booking.ServiceId";
+                return HandleReadOneResponse<Domain.Service, BookingResponseObject>(service);
+            }
             
             var company = await Mediator.Send(new Application.CompanyActions.GetOne.Query{ Id = service.Value.CompanyId });
-            if (company.Error.Type == ErrorType.NotFound)
-                return NotFound(service.Error.Field = "Service.CompanyId");
+            if (!company.IsSuccess)
+            {
+                service.Error.Field = "Service.CompanyId";
+                return HandleReadOneResponse<Company, BookingResponseObject>(company);
+            }
         
             var topic = _notificationService.GetNotificationTopic(NotificationType.BookingMade);
             var content = _notificationService.GetNotificationContent(NotificationType.BookingMade, result.Value, service.Value, company.Value);
@@ -129,12 +142,15 @@ namespace API.Controllers
         public async Task<IActionResult> Update([FromBody] UpdateBookingDto updateBookingDto)
         {
             var booking = await Mediator.Send(new GetOne.Query{ Id = new Guid(updateBookingDto.Id) });
-            if (booking.Error.Type == ErrorType.NotFound)
-                return NotFound(booking.Error);
+            if (!booking.IsSuccess)
+                return HandleUpdateResponse(booking);
             
             var service = await Mediator.Send(new Application.ServiceActions.GetOne.Query{ Id = booking.Value.ServiceId });
-            if (service.Error.Type == ErrorType.NotFound)
-                return NotFound(service.Error.Field = "ServiceId");
+            if (!service.IsSuccess)
+            {
+                service.Error.Field = "Booking.ServiceId";
+                return HandleReadOneResponse<Domain.Service, BookingResponseObject>(service);
+            }
             if (! await _permissionHelper.IsCompanyOwner(GetLoggedUserId(), service.Value.CompanyId))
                 return Unauthorized();
             
@@ -147,8 +163,11 @@ namespace API.Controllers
                 return HandleUpdateResponse(result);
             
             var company = await Mediator.Send(new Application.CompanyActions.GetOne.Query{ Id = service.Value.CompanyId });
-            if (company.Error.Type == ErrorType.NotFound)
-                return NotFound(service.Error.Field = "Service.CompanyId");
+            if (!company.IsSuccess)
+            {
+                service.Error.Field = "Service.CompanyId";
+                return HandleReadOneResponse<Company, BookingResponseObject>(company);
+            }
             
             var notificationType = updateBookingDto.Status == (int)BookingStatusType.Accepted
                 ? NotificationType.BookingAccepted
@@ -177,11 +196,14 @@ namespace API.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             var booking = await Mediator.Send(new GetOne.Query{ Id = id });
-            if (booking.Error.Type == ErrorType.NotFound)
-                return NotFound(booking.Error);
+            if (!booking.IsSuccess)
+                return HandleDeleteResponse(booking);
             var service = await Mediator.Send(new Application.ServiceActions.GetOne.Query{ Id = booking.Value.ServiceId });
-            if (service.Error.Type == ErrorType.NotFound)
-                return NotFound(service.Error.Field = "ServiceId");
+            if (!service.IsSuccess)
+            {
+                service.Error.Field = "Booking.ServiceId";
+                return HandleReadOneResponse<Domain.Service, BookingResponseObject>(service);
+            }
             if (! await _permissionHelper.IsCompanyOwner(GetLoggedUserId(), service.Value.CompanyId))
                 return Unauthorized();
             

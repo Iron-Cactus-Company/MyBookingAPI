@@ -57,8 +57,8 @@ namespace API.Controllers
         public async Task<IActionResult> Update([FromBody] UpdateOpeningHoursDto updateOpeningHoursDto)
         {
             var openingHours = await Mediator.Send(new GetOne.Query{ Id = new Guid(updateOpeningHoursDto.Id) });
-            if (openingHours.Error.Type == ErrorType.NotFound)
-                return NotFound(openingHours.Error);
+            if (!openingHours.IsSuccess)
+                HandleUpdateResponse(openingHours);
             if (! await _permissionHelper.IsCompanyOwner(GetLoggedUserId(), openingHours.Value.CompanyId))
                 return Unauthorized();
             
@@ -74,8 +74,8 @@ namespace API.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             var openingHours = await Mediator.Send(new GetOne.Query{ Id = id });
-            if (openingHours.Error.Type == ErrorType.NotFound)
-                return NotFound(openingHours.Error);
+            if (!openingHours.IsSuccess)
+                return HandleDeleteResponse(openingHours);
             if (! await _permissionHelper.IsCompanyOwner(GetLoggedUserId(), openingHours.Value.CompanyId))
                 return Unauthorized();
             
