@@ -16,9 +16,7 @@ public static class ApplicationServiceExtensions
         //Add DB
         services.AddDbContext<DataContext>(opt => 
         {
-            // opt.UseSqlite(configuration.GetConnectionString("DefaultConnection"));
-            opt.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
-            
+            opt.UseNpgsql(configuration["DefaultConnection"]);
         });
         //Should be one time thing, all mediators will be registered
         services.AddMediatR(config => config.RegisterServicesFromAssembly(typeof(GetMany.Handler).Assembly));

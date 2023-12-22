@@ -1,0 +1,54 @@
+services:
+  api:
+    build: 
+      dockerfile: prod_api.Dockerfile
+    container_name: mybooking_api_prod
+    restart: always
+    environment:
+      - DefaultConnection=Host=mybooking_db_prod;Port=5432;Database=my_booking_prod;Username=my_booking;Password=my_booking
+      - TokenKey=9Gn1L,gW50x6WYF0ZhHbk_,M:847275-'@.7M44JfScOH2NZ'(*X@9ke4E3DBU9'
+      - Email=cactus.email.bot@gmail.com
+      - EmailPassword="gvto psmv aehy eqrc"
+      - SmtpServer=smtp.gmail.com
+      - SmtpPort=465
+    depends_on:
+      - db
+    networks:
+      - backend
+    ports:
+      - 5000:8080
+
+  db:
+    image: postgres:11-bullseye
+    container_name: mybooking_db_prod
+    restart: always
+    environment:
+      - POSTGRES_USER=my_booking
+      - POSTGRES_PASSWORD=my_booking
+      - POSTGRES_DB=my_booking_prod
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - myBooking_prod:/var/lib/postgresql/data
+    networks:
+      - backend
+    ports:
+      - 5432:5432
+
+  adminer:
+    build: 
+      dockerfile: pretty-adminer.Dockerfile
+    container_name: mybooking_adminer_prod
+    depends_on:
+      - db
+    restart: always
+    networks:
+      - backend
+    ports:
+      - 8080:8080
+        
+volumes:
+  myBooking_prod:
+
+networks:
+  backend:
+    name: mybooking_backend_prod

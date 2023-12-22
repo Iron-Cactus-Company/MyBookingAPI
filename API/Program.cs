@@ -74,8 +74,8 @@ try
 {
     //Update the DB if needed = not exists => create, SQL updated => update
     var context = services.GetRequiredService<DataContext>();
+    await context.Database.EnsureCreatedAsync();
     await context.Database.MigrateAsync();
-    // await context.Database.EnsureCreatedAsync();
 }
 catch (Exception e)
 {
