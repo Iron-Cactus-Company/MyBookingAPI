@@ -8,6 +8,7 @@ using API.Contracts.OpeningHours;
 using API.Contracts.Service;
 using Application.DTOs;
 using AutoMapper;
+using AutoMapper.Configuration.Annotations;
 using Domain;
 namespace API.Helpers;
 
@@ -16,32 +17,40 @@ public class MappingProfile : Profile
     
     public MappingProfile()
     {
-        CreateMap <BusinessProfile, LoginUserResponseObject>();
+        CreateMap<BusinessProfile, LoginUserResponseObject>();
         
-        CreateMap <CreateClientDto, Client>();
+        CreateMap<CreateClientDto, Client>();
         CreateMap<UpdateClientDto, Client>();
         CreateMap<Client, ClientResponseObject>();
         
-        CreateMap <CreateCompanyDto, Company>();
+        CreateMap<CreateCompanyDto, Company>();
         CreateMap<UpdateCompanyDto, Company>()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         CreateMap<Company, CompanyResponseObject>();
         
         
-        CreateMap <CreateBusinessProfileDto, BusinessProfile>();
+        CreateMap<CreateBusinessProfileDto, BusinessProfile>();
         CreateMap<UpdateBusinessProfileDto, BusinessProfile>();
         CreateMap<BusinessProfile, BusinessProfileResponseObject>();
         
         
-        CreateMap <CreateBookingDto, Booking>();
-        CreateMap<UpdateBookingDto, Booking>()
+        CreateMap<UserResponseObject, UserResponseObject>()
+            .AfterMap((src, dest) =>
+            {
+                dest.Company.BusinessProfile = null;
+                dest.Company.Services = null;
+            });
+        
+        
+        CreateMap<CreateBookingDto, Booking>();
+        CreateMap<UpdateBookingDto, Booking>() 
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => 
                 srcMember != null && !(srcMember is Guid guid && guid == Guid.Empty)
             ));
-        CreateMap <Booking, BookingResponseObject>();
+        CreateMap<Booking, BookingResponseObject>();
         CreateMap<BookingDto, BookingResponseObject>();
         
-        CreateMap <CreateServiceDto, Domain.Service>();
+        CreateMap<CreateServiceDto, Domain.Service>();
         CreateMap<UpdateServiceDto, Domain.Service>();
         CreateMap<Domain.Service, ServiceResponseObject>();
         
@@ -49,7 +58,7 @@ public class MappingProfile : Profile
         CreateMap<UpdateOpeningHoursDto, OpeningHours>();
         CreateMap<OpeningHours, OpeningHoursResponseObject>();
         
-        CreateMap <CreateExceptionHoursDto, ExceptionHours>();
+        CreateMap<CreateExceptionHoursDto, ExceptionHours>();
         CreateMap<UpdateExceptionHoursDto, ExceptionHours>();
         CreateMap<ExceptionHours, ExceptionHoursResponseObject>();
         
