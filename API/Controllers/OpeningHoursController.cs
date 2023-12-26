@@ -7,6 +7,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Tokens;
 
 namespace API.Controllers
 {
@@ -25,10 +26,16 @@ namespace API.Controllers
         [OffsetPaginator]
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> GetMany()
+        public async Task<IActionResult> GetMany([FromQuery] string companyId)
         {
-            var result = await Mediator.Send(new GetMany.Query());
-            return HandleReadOneResponse<List<OpeningHours>, List<OpeningHoursResponseObject>>(result);
+            if (companyId.IsNullOrEmpty())
+            {
+                var result = await Mediator.Send(new GetMany.Query());
+                return HandleReadManyResponse<List<OpeningHours>, List<OpeningHoursResponseObject>>(result);
+            }
+            
+            var resp = await Mediator.Send(new FindOneByCompanyId.Query{CompanyId = new Guid(companyId)});
+            return HandleReadOneResponse<OpeningHours, OpeningHoursResponseObject>(resp);
         }
 
         [AllowAnonymous]
