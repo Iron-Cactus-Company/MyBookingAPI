@@ -1,9 +1,12 @@
+using System.Runtime.InteropServices.JavaScript;
 using API.Contracts.Auth;
+using API.Contracts.BusinessProfile;
 using API.Enum;
 using API.Service;
 using Application.BusinessProfileActions;
 using Application.Core.Security;
 using AutoMapper;
+using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -36,5 +39,23 @@ public class AuthController : BaseApiController
         var loginUserResponseObject = _mapper.Map<LoginUserResponseObject>(businessProfile.Value);
         loginUserResponseObject.AccessToken = token;
         return loginUserResponseObject;
+    }
+    
+    [HttpGet("user")]
+    public async Task<IActionResult> GetUser()
+    {
+        var businessProfile = await Mediator.Send(new GetOne.Query { Id = new Guid(GetLoggedUserId()) });
+        if(!businessProfile.IsSuccess)
+            return HandleReadOneResponse<BusinessProfile, BusinessProfileResponseObject>(businessProfile);
+        
+        var company = await Mediator.Send(
+            new Application.CompanyActions.FindOneByBusinessProfileId.Query
+            {
+                BusinessProfileId = new Guid(GetLoggedUserId())
+            });
+        
+        var resp = new UserResponseObject { Id = businessProfile.Value.Id.ToString(), Email = businessProfile.Value.Email, Company = company.Value};
+        var serializedResult = Mapper.Map<UserResponseObject>(resp);
+        return Ok(new ObjectResponseToClient<UserResponseObject>{ Data = serializedResult });
     }
 }
