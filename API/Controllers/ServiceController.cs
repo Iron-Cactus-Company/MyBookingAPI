@@ -5,6 +5,7 @@ using Application.ServiceActions;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 
 namespace API.Controllers
@@ -24,10 +25,16 @@ namespace API.Controllers
         [OffsetPaginator]
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> GetMany()
+        public async Task<IActionResult> GetMany([FromQuery] string companyId)
         {
-            var result = await Mediator.Send(new GetMany.Query());
-            return HandleReadOneResponse<List<Domain.Service>, List<ServiceResponseObject>>(result);
+            if (companyId.IsNullOrEmpty())
+            {
+                var result = await Mediator.Send(new GetMany.Query());
+                return HandleReadManyResponse<List<Domain.Service>, List<ServiceResponseObject>>(result);
+            }
+            
+            var resp = await Mediator.Send(new FindByCompanyId.Query{CompanyId = new Guid(companyId)});
+            return HandleReadManyResponse<List<Domain.Service>, List<ServiceResponseObject>>(resp);
         }
 
         [AllowAnonymous]
